@@ -1,64 +1,65 @@
 package mrdimosthenis.feyn.math
 
+import mrdimosthenis.feyn.types.Threshold
+
 import scala.util.chaining._
 
-case class Vec(coordinates: Double*) {
+case class Vec(components: Complex*) {
 
-  val lazyCoordinates: LazyList[Double] =
-    coordinates.to(LazyList)
-
-  val dim: Int = lazyCoordinates.length
-
-  def exceptDiffDims(z: Vec): Unit =
-    if (dim != z.dim)
+  def exceptDiffDims(v: Vec): Unit =
+    if (dim != v.dim)
       throw new Exception("Vectors of different dimension")
 
-  val length: Double = lazyCoordinates
-    .map(x => x * x)
+  val lazyComponents: LazyList[Complex] =
+    components.to(LazyList)
+
+  val dim: Int = lazyComponents.length
+
+  val norm: Double = lazyComponents
+    .map(z => z.abs * z.abs)
     .sum
     .pipe(Math.sqrt)
 
-  def scalarProduct(c: Double): Vec =
-    lazyCoordinates
-      .map(c * _)
-      .pipe { x => Vec(x: _*) }
+  val unit: Option[Vec] =
+    if (norm == 0) None
+    else Some {
+      (1.0 / norm) * this
+    }
 
-  def normalized: Vec = {
-    if (length == 0)
-      throw new Exception("Unit of zero vector")
-    this.scalarProduct(1.0 / length)
+  def *(v: Vec): Complex = {
+    exceptDiffDims(v)
+    lazyComponents
+      .zip(v.lazyComponents)
+      .map(t => t._1 * t._2)
+      .foldLeft(Complex.zero) { (z1, z2) => z1 + z2 }
   }
 
-  def plus(z: Vec): Vec = {
-    exceptDiffDims(z)
-    lazyCoordinates
-      .zip(z.lazyCoordinates)
-      .map(x => x._1 + x._2)
-      .pipe { x => Vec(x: _*) }
+  def +(v: Vec): Vec = {
+    exceptDiffDims(v)
+    lazyComponents
+      .zip(v.lazyComponents)
+      .map(z => z._1 + z._2)
+      .pipe { zs => Vec(zs: _*) }
   }
 
-  def dotProduct(z: Vec): Double = {
-    exceptDiffDims(z)
-    lazyCoordinates
-      .zip(z.lazyCoordinates)
-      .map(x => x._1 * x._2)
-      .sum
+  def -(v: Vec): Vec =
+    v.lazyComponents
+      .map(Complex.zero - _)
+      .pipe { zs => Vec(zs: _*) }
+      .+(this)
+
+  def ==(v: Vec): Boolean = {
+    exceptDiffDims(v)
+    lazyComponents
+      .zip(v.lazyComponents)
+      .forall(z => z._1 == z._2)
   }
 
-  def isEqual(z: Vec): Boolean = {
-    exceptDiffDims(z)
-    lazyCoordinates
-      .zip(z.lazyCoordinates)
-      .forall(x => x._1 == x._2)
-  }
-
-  def isAlmostEqual(z: Vec)(implicit error: Double): Boolean = {
-    exceptDiffDims(z)
-    lazyCoordinates
-      .zip(z.lazyCoordinates)
-      .forall { x =>
-        Math.abs(x._1 - x._2) < error
-      }
+  def =~(v: Vec)(implicit error: Threshold): Boolean = {
+    exceptDiffDims(v)
+    lazyComponents
+      .zip(v.lazyComponents)
+      .forall(x => x._1 =~ x._2)
   }
 
 }
@@ -67,7 +68,25 @@ object Vec {
 
   def zero(n: Int): Vec =
     LazyList
-      .fill(n)(0.0)
-      .pipe { x => Vec(x: _*) }
+      .fill(n)(Complex.zero)
+      .pipe { zs => Vec(zs: _*) }
+
+  implicit class DoubleVecExtension(val x: Double) {
+
+    def *(v: Vec): Vec =
+      v.lazyComponents
+        .map(x * _)
+        .pipe { zs => Vec(zs: _*) }
+
+  }
+
+  implicit class ComplexVecExtension(val z: Complex) {
+
+    def *(v: Vec): Vec =
+      v.lazyComponents
+        .map(z * _)
+        .pipe { zs => Vec(zs: _*) }
+
+  }
 
 }

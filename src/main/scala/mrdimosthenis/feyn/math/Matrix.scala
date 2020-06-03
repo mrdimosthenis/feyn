@@ -17,7 +17,7 @@ case class Matrix(columns: Vec*) {
 
   def transposed: Matrix =
     lazyColumns
-      .map(_.lazyCoordinates)
+      .map(_.lazyComponents)
       .transpose
       .map { x => Vec(x: _*) }
       .pipe { v => Matrix(v: _*) }
@@ -25,7 +25,7 @@ case class Matrix(columns: Vec*) {
   def scalarProduct(c: Double): Matrix =
     lazyColumns
       .map {
-        _.scalarProduct(c)
+        _.*(c)
       }
       .pipe { v => Matrix(v: _*) }
 
@@ -58,7 +58,7 @@ object Matrix {
       .fill(n)(Vec.zero(m))
       .zipWithIndex
       .map { case (v, i) =>
-        v.lazyCoordinates.zipWithIndex.map { case (x, j) =>
+        v.lazyComponents.zipWithIndex.map { case (x, j) =>
           if (j == i) 1.0
           else x
         }
