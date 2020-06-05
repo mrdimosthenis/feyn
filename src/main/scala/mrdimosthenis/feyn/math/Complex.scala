@@ -2,11 +2,16 @@ package mrdimosthenis.feyn.math
 
 import mrdimosthenis.feyn.types._
 
+import scala.util.Random
+
 case class Complex(re: Double, im: Double) {
 
   val conjugate: Complex = Complex(re, -im)
 
   val abs: Double = Math.sqrt(re * re + im * im)
+
+  val opposite: Complex =
+    Complex(-re, -im)
 
   val inverse: Option[Complex] =
     if (this == Complex.zero) None
@@ -20,7 +25,7 @@ case class Complex(re: Double, im: Double) {
     Complex(re + z.re, im + z.im)
 
   def -(z: Complex): Complex =
-    this + Complex(-z.re, -z.im)
+    this + z.opposite
 
   def *(z: Complex): Complex =
     Complex(re * z.re - im * z.im, re * z.im + im * z.re)
@@ -42,8 +47,18 @@ object Complex {
 
   implicit class DoubleComplexExtension(val x: Double) {
 
+    val toComplex: Complex =
+      Complex(x, 0.0)
+
     def *(z: Complex): Complex =
       Complex(x, 0.0) * z
+
+  }
+
+  implicit class RandomComplexExtension(val r: Random) {
+
+    def nextComplex(): Complex =
+      Complex(r.nextDouble(), r.nextDouble())
 
   }
 
