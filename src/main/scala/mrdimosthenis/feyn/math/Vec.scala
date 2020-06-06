@@ -16,19 +16,19 @@ case class Vec(components: Complex*) {
   override def toString: String =
     lazyComponents.mkString("(", ", ", ")")
 
-  val dim: Int = lazyComponents.length
+  def dim: Int = lazyComponents.length
 
-  val norm: Double = lazyComponents
+  def norm: Double = lazyComponents
     .map(z => z.abs * z.abs)
     .sum
     .pipe(Math.sqrt)
 
-  val opposite: Vec =
+  def opposite: Vec =
     lazyComponents
       .map(_.opposite)
       .pipe { zs => Vec(zs: _*) }
 
-  val unit: Option[Vec] =
+  def unit: Option[Vec] =
     if (norm == 0) None
     else Some {
       (1.0 / norm) * this

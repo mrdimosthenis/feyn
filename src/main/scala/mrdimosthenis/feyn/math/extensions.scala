@@ -21,6 +21,10 @@ object extensions {
     def *(a: Matrix): Matrix =
       x.toComplex * a
 
+    def =~(y: Double)(implicit error: Threshold): Boolean = {
+      Math.abs(x - y) < error
+    }
+
   }
 
   implicit class RandomExtension(val r: Random) {

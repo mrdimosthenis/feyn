@@ -7,14 +7,14 @@ case class Complex(re: Double, im: Double) {
   override def toString: String =
     s"${re.toString} ${if (im > 0) "+" else ""}${im.toString}*i"
 
-  val conjugate: Complex = Complex(re, -im)
+  def conjugate: Complex = Complex(re, -im)
 
-  val abs: Double = Math.sqrt(re * re + im * im)
+  def abs: Double = Math.sqrt(re * re + im * im)
 
-  val opposite: Complex =
+  def opposite: Complex =
     Complex(-re, -im)
 
-  val inverse: Option[Complex] =
+  def inverse: Option[Complex] =
     if (this == Complex.zero) None
     else {
       val invRe = re / (abs * abs)
@@ -22,7 +22,7 @@ case class Complex(re: Double, im: Double) {
       Some(Complex(invRe, invIm))
     }
 
-  val toPolar: (Double, Double) = {
+  def toPolar: (Double, Double) = {
     val theta = Math.atan(im / re)
     (abs, theta)
   }
@@ -37,19 +37,19 @@ case class Complex(re: Double, im: Double) {
     Complex(re * z.re - im * z.im, re * z.im + im * z.re)
 
   def /(z: Complex): Option[Complex] =
-    inverse.map(_ * z)
+    z.inverse.map(_ * this)
 
   def ==(z: Complex): Boolean =
     re == z.re && im == z.im
 
-  def =~(z: Complex)(implicit e: Threshold): Boolean =
-    (Math.abs(re - z.re) < e) && (Math.abs(im - z.im) < e)
+  def =~(z: Complex)(implicit error: Threshold): Boolean =
+    re =~ z.re && im =~ z.im
 
 }
 
 object Complex {
 
-  val zero: Complex = Complex(0.0, 0.0)
+  def zero: Complex = Complex(0.0, 0.0)
 
   def fromPolar(r: Double, theta: Double): Complex = {
     val re = r * Math.cos(theta)

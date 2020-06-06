@@ -1,8 +1,14 @@
 package mrdimosthenis.feyn.math
 
+import mrdimosthenis.feyn.math.extensions._
+
 import scala.util.chaining._
 
 case class Matrix(rows: Vec*) {
+
+  def exceptDiffDims(a: Matrix): Unit =
+    if (dims != a.dims)
+      throw new Exception("Matrices of different dimensions")
 
   val lazyColumns: LazyList[Vec] =
     rows.to(LazyList)
@@ -12,7 +18,7 @@ case class Matrix(rows: Vec*) {
       v.lazyComponents.mkString("\t")
     }.mkString("| ", "|\n|", "|")
 
-  val dims: (Int, Int) = {
+  def dims: (Int, Int) = {
     val m = rows.head.dim
     if (rows.tail.exists(_.dim != m))
       throw new Exception("Matrix with columns of different dimension")
@@ -20,19 +26,19 @@ case class Matrix(rows: Vec*) {
     (m, n)
   }
 
-  val opposite: Matrix =
+  def opposite: Matrix =
     lazyColumns
       .map(_.opposite)
       .pipe { zs => Matrix(zs: _*) }
 
-  val transposed: Matrix =
+  def transposed: Matrix =
     lazyColumns
       .map(_.lazyComponents)
       .transpose
       .map { x => Vec(x: _*) }
       .pipe { v => Matrix(v: _*) }
 
-  val transjugate: Matrix =
+  def transjugate: Matrix =
     lazyColumns
       .map { v =>
         v.lazyComponents
@@ -42,8 +48,7 @@ case class Matrix(rows: Vec*) {
       .transposed
 
   def +(a: Matrix): Matrix = {
-    if (dims != a.dims)
-      throw new Exception("Matrices of different dimensions")
+    exceptDiffDims(a)
     lazyColumns
       .zip(a.lazyColumns)
       .map { case (v1, v2) => v1 + v2 }
@@ -51,8 +56,7 @@ case class Matrix(rows: Vec*) {
   }
 
   def -(a: Matrix): Matrix = {
-    if (dims != a.dims)
-      throw new Exception("Matrices of different dimensions")
+    exceptDiffDims(a)
     this + a.opposite
   }
 
@@ -64,6 +68,20 @@ case class Matrix(rows: Vec*) {
         .map(v => row * v)
     }.map { x => Vec(x: _*) }
   }.pipe { v => Matrix(v: _*) }
+
+  def ==(a: Matrix): Boolean = {
+    exceptDiffDims(a)
+    lazyColumns
+      .zip(a.lazyColumns)
+      .forall(z => z._1 == z._2)
+  }
+
+  def =~(a: Matrix)(implicit error: Threshold): Boolean = {
+    exceptDiffDims(a)
+    lazyColumns
+      .zip(a.lazyColumns)
+      .forall(x => x._1 =~ x._2)
+  }
 
 }
 
