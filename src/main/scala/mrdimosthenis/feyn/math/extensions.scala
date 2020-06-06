@@ -27,21 +27,21 @@ object extensions {
 
   }
 
-  implicit class RandomExtension(val r: Random) {
+  implicit class RandomExtension(val random: Random) {
 
     def nextComplex(): Complex =
-      Complex(r.nextDouble(), r.nextDouble())
+      Complex(random.nextDouble(), random.nextDouble())
 
     def nextVec(n: Int): Vec =
       Vec.zero(n)
         .lazyComponents
-        .map(_ => r.nextComplex())
+        .map(_ => random.nextComplex())
         .pipe { zs => Vec(zs: _*) }
 
     def nextMatrix(m: Int, n: Int): Matrix =
       Matrix.zero(m, n)
         .lazyColumns
-        .map(_ => r.nextVec(m))
+        .map(_ => random.nextVec(m))
         .pipe { v => Matrix(v: _*) }
 
   }
