@@ -1,13 +1,16 @@
 package mrdimosthenis.feyn.math
 
 import mrdimosthenis.feyn.math.extensions._
-
 import minitest._
+
+import scala.util.Random
 import scala.util.chaining._
 
 object ComplexTest extends SimpleTestSuite {
 
   implicit val error: Threshold = 0.04
+
+  val random : Random = new Random()
 
   test("Addition") {
     assert(
@@ -51,6 +54,21 @@ object ComplexTest extends SimpleTestSuite {
       }.pipe { case Some(z) =>
         z =~ Complex(1, -3.0 / 2)
       }
+    )
+  }
+
+  val z1: Complex = random.nextComplex()
+  val z2: Complex = random.nextComplex()
+
+  test("Commutativity of addition") {
+    assert(
+      z1 + z2 == z2 + z1
+    )
+  }
+
+  test("Commutativity of multiplication") {
+    assert(
+      z1 * z2 == z2 * z1
     )
   }
 
