@@ -13,6 +13,9 @@ case class Vec(components: Complex*) {
   val lazyComponents: LazyList[Complex] =
     components.to(LazyList)
 
+  override def toString: String =
+    lazyComponents.mkString("(", ", ", ")")
+
   val dim: Int = lazyComponents.length
 
   val norm: Double = lazyComponents

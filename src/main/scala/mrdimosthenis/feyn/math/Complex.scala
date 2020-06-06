@@ -4,6 +4,9 @@ import mrdimosthenis.feyn.math.extensions._
 
 case class Complex(re: Double, im: Double) {
 
+  override def toString: String =
+    s"${re.toString} ${if (im > 0) "+" else ""}${im.toString}*i"
+
   val conjugate: Complex = Complex(re, -im)
 
   val abs: Double = Math.sqrt(re * re + im * im)

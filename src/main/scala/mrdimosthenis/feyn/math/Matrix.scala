@@ -2,14 +2,19 @@ package mrdimosthenis.feyn.math
 
 import scala.util.chaining._
 
-case class Matrix(columns: Vec*) {
+case class Matrix(rows: Vec*) {
 
   val lazyColumns: LazyList[Vec] =
-    columns.to(LazyList)
+    rows.to(LazyList)
+
+  override def toString: String =
+    lazyColumns.map { v =>
+      v.lazyComponents.mkString("\t")
+    }.mkString("| ", "|\n|", "|")
 
   val dims: (Int, Int) = {
-    val m = columns.head.dim
-    if (columns.tail.exists(_.dim != m))
+    val m = rows.head.dim
+    if (rows.tail.exists(_.dim != m))
       throw new Exception("Matrix with columns of different dimension")
     val n = lazyColumns.length
     (m, n)
