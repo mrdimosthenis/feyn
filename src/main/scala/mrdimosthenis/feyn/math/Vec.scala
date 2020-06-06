@@ -35,7 +35,7 @@ case class Vec(components: Complex*) {
     exceptDiffDims(v)
     lazyComponents
       .zip(v.lazyComponents)
-      .map(t => t._1 * t._2)
+      .map(t => t._1.conjugate * t._2)
       .foldLeft(Complex.zero) { (z1, z2) => z1 + z2 }
   }
 

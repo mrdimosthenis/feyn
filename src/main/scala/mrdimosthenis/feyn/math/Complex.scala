@@ -19,6 +19,11 @@ case class Complex(re: Double, im: Double) {
       Some(Complex(invRe, invIm))
     }
 
+  val toPolar: (Double, Double) = {
+    val theta = Math.atan(im / re)
+    (abs, theta)
+  }
+
   def +(z: Complex): Complex =
     Complex(re + z.re, im + z.im)
 
@@ -42,5 +47,11 @@ case class Complex(re: Double, im: Double) {
 object Complex {
 
   val zero: Complex = Complex(0.0, 0.0)
+
+  def fromPolar(r: Double, theta: Double): Complex = {
+    val re = r * Math.cos(theta)
+    val im = r * Math.sin(theta)
+    Complex(re, im)
+  }
 
 }

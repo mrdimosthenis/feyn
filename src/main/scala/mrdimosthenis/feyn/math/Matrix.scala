@@ -27,6 +27,15 @@ case class Matrix(columns: Vec*) {
       .map { x => Vec(x: _*) }
       .pipe { v => Matrix(v: _*) }
 
+  val transjugate: Matrix =
+    lazyColumns
+      .map { v =>
+        v.lazyComponents
+          .map(_.conjugate)
+      }.map { x => Vec(x: _*) }
+      .pipe { v => Matrix(v: _*) }
+      .transposed
+
   def +(a: Matrix): Matrix = {
     if (dims != a.dims)
       throw new Exception("Matrices of different dimensions")
@@ -71,5 +80,12 @@ object Matrix {
         }
       }.map { x => Vec(x: _*) }
       .pipe { v => Matrix(v: _*) }
+
+  def fromVectors(v: Vec, u: Vec): Matrix =
+    v.lazyComponents.map { z =>
+      u.lazyComponents
+        .map(z * _.conjugate)
+        .pipe { x => Vec(x: _*) }
+    }.pipe { v => Matrix(v: _*) }
 
 }
