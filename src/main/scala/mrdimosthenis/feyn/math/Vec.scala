@@ -1,9 +1,7 @@
 package mrdimosthenis.feyn.math
 
-import mrdimosthenis.feyn.types.Threshold
-import Complex._
+import mrdimosthenis.feyn.math.extensions._
 
-import scala.util.Random
 import scala.util.chaining._
 
 case class Vec(components: Complex*) {
@@ -74,31 +72,5 @@ object Vec {
     LazyList
       .fill(n)(Complex.zero)
       .pipe { zs => Vec(zs: _*) }
-
-  implicit class ComplexVecExtension(val z: Complex) {
-
-    def *(v: Vec): Vec =
-      v.lazyComponents
-        .map(z * _)
-        .pipe { zs => Vec(zs: _*) }
-
-  }
-
-  implicit class DoubleVecExtension(val x: Double) {
-
-    def *(v: Vec): Vec =
-      x.toComplex * v
-
-  }
-
-  implicit class RandomVecExtension(val r: Random) {
-
-    def nextVec(n: Int): Vec =
-      zero(n)
-        .lazyComponents
-        .map(_ => r.nextComplex())
-        .pipe { zs => Vec(zs: _*) }
-
-  }
 
 }

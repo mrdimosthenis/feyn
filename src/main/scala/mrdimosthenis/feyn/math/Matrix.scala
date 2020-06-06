@@ -1,9 +1,5 @@
 package mrdimosthenis.feyn.math
 
-import Vec._
-import Complex._
-
-import scala.util.Random
 import scala.util.chaining._
 
 case class Matrix(columns: Vec*) {
@@ -75,31 +71,5 @@ object Matrix {
         }
       }.map { x => Vec(x: _*) }
       .pipe { v => Matrix(v: _*) }
-
-  implicit class ComplexMatrixExtension(val z: Complex) {
-
-    def *(a: Matrix): Matrix =
-      a.lazyColumns
-        .map(z * _)
-        .pipe { v => Matrix(v: _*) }
-
-  }
-
-  implicit class DoubleMatrixExtension(val x: Double) {
-
-    def *(a: Matrix): Matrix =
-      x.toComplex * a
-
-  }
-
-  implicit class RandomMatrixExtension(val r: Random) {
-
-    def nextMatrix(m: Int, n: Int): Matrix =
-      zero(m, n)
-        .lazyColumns
-        .map(_ => r.nextVec(m))
-        .pipe { v => Matrix(v: _*) }
-
-  }
 
 }

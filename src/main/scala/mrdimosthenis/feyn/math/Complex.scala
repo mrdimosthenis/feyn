@@ -1,8 +1,6 @@
 package mrdimosthenis.feyn.math
 
-import mrdimosthenis.feyn.types._
-
-import scala.util.Random
+import mrdimosthenis.feyn.math.extensions._
 
 case class Complex(re: Double, im: Double) {
 
@@ -44,22 +42,5 @@ case class Complex(re: Double, im: Double) {
 object Complex {
 
   val zero: Complex = Complex(0.0, 0.0)
-
-  implicit class DoubleComplexExtension(val x: Double) {
-
-    val toComplex: Complex =
-      Complex(x, 0.0)
-
-    def *(z: Complex): Complex =
-      Complex(x, 0.0) * z
-
-  }
-
-  implicit class RandomComplexExtension(val r: Random) {
-
-    def nextComplex(): Complex =
-      Complex(r.nextDouble(), r.nextDouble())
-
-  }
 
 }
