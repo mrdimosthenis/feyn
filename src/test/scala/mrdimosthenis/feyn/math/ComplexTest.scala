@@ -60,13 +60,13 @@ object ComplexTest extends SimpleTestSuite {
   val z1: Complex = random.nextComplex()
   val z2: Complex = random.nextComplex()
 
-  test("Commutativity of addition") {
+  test("Commutativity of addition property") {
     assert(
       z1 + z2 == z2 + z1
     )
   }
 
-  test("Commutativity of multiplication") {
+  test("Commutativity of multiplication property") {
     assert(
       z1 * z2 == z2 * z1
     )
