@@ -5,7 +5,7 @@ import mrdimosthenis.feyn.math.extensions._
 case class Complex(re: Double, im: Double) {
 
   override def toString: String =
-    s"${re} ${if (im >= 0) "+" else "-"} ${Math.abs(im)}*i"
+    s"$re ${if (im >= 0) "+" else "-"} ${Math.abs(im)}*i"
 
   def conjugate: Complex = Complex(re, -im)
 
