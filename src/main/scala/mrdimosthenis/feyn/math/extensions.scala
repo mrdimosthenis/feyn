@@ -36,13 +36,13 @@ object extensions {
       Vec.zero(n)
         .lazyComponents
         .map(_ => random.nextComplex())
-        .pipe { zs => Vec(zs: _*) }
+        .pipe(Vec.apply)
 
     def nextMatrix(m: Int, n: Int): Matrix =
       Matrix.zero(m, n)
         .lazyColumns
         .map(_ => random.nextVec(m))
-        .pipe { v => Matrix(v: _*) }
+        .pipe(Matrix.apply)
 
   }
 
@@ -51,12 +51,24 @@ object extensions {
     def *(v: Vec): Vec =
       v.lazyComponents
         .map(z * _)
-        .pipe { zs => Vec(zs: _*) }
+        .pipe(Vec.apply)
 
     def *(a: Matrix): Matrix =
       a.lazyColumns
         .map(z * _)
-        .pipe { v => Matrix(v: _*) }
+        .pipe(Matrix.apply)
+
+  }
+
+  implicit class VecExtension(val v: Vec) {
+
+    def **(u: Vec): Matrix =
+      v.lazyComponents
+        .map { z =>
+          u.lazyComponents
+            .map(z * _.conjugate)
+            .pipe(Vec.apply)
+        }.pipe(Matrix.apply)
 
   }
 

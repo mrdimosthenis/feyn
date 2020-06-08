@@ -29,22 +29,22 @@ case class Matrix(rows: Vec*) {
   def opposite: Matrix =
     lazyColumns
       .map(_.opposite)
-      .pipe { zs => Matrix(zs: _*) }
+      .pipe(Matrix.apply)
 
   def transposed: Matrix =
     lazyColumns
       .map(_.lazyComponents)
       .transpose
-      .map { x => Vec(x: _*) }
-      .pipe { v => Matrix(v: _*) }
+      .map(Vec.apply)
+      .pipe(Matrix.apply)
 
   def transjugate: Matrix =
     lazyColumns
       .map { v =>
         v.lazyComponents
           .map(_.conjugate)
-      }.map { x => Vec(x: _*) }
-      .pipe { v => Matrix(v: _*) }
+      }.map(Vec.apply)
+      .pipe(Matrix.apply)
       .transposed
 
   def +(a: Matrix): Matrix = {
@@ -52,7 +52,7 @@ case class Matrix(rows: Vec*) {
     lazyColumns
       .zip(a.lazyColumns)
       .map { case (v1, v2) => v1 + v2 }
-      .pipe { v => Matrix(v: _*) }
+      .pipe(Matrix.apply)
   }
 
   def -(a: Matrix): Matrix = {
@@ -66,8 +66,8 @@ case class Matrix(rows: Vec*) {
     transposed.lazyColumns.map { row =>
       a.lazyColumns
         .map(v => row * v)
-    }.map { x => Vec(x: _*) }
-  }.pipe { v => Matrix(v: _*) }
+    }.map(Vec.apply)
+  }.pipe(Matrix.apply)
 
   def ==(a: Matrix): Boolean = {
     exceptDiffDims(a)
@@ -90,7 +90,7 @@ object Matrix {
   def zero(m: Int, n: Int): Matrix =
     LazyList
       .fill(n)(Vec.zero(m))
-      .pipe { v => Matrix(v: _*) }
+      .pipe(Matrix.apply)
 
   def id(m: Int, n: Int): Matrix =
     zero(m, n)
@@ -101,14 +101,7 @@ object Matrix {
           if (j == i) Complex(1.0, 0.0)
           else x
         }
-      }.map { x => Vec(x: _*) }
-      .pipe { v => Matrix(v: _*) }
-
-  def fromVectors(v: Vec, u: Vec): Matrix =
-    v.lazyComponents.map { z =>
-      u.lazyComponents
-        .map(z * _.conjugate)
-        .pipe { x => Vec(x: _*) }
-    }.pipe { v => Matrix(v: _*) }
+      }.map(Vec.apply)
+      .pipe(Matrix.apply)
 
 }

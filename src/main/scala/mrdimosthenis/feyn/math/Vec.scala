@@ -26,7 +26,7 @@ case class Vec(components: Complex*) {
   def opposite: Vec =
     lazyComponents
       .map(_.opposite)
-      .pipe { zs => Vec(zs: _*) }
+      .pipe(Vec.apply)
 
   def unit: Option[Vec] =
     if (norm == 0) None
@@ -47,7 +47,7 @@ case class Vec(components: Complex*) {
     lazyComponents
       .zip(v.lazyComponents)
       .map(z => z._1 + z._2)
-      .pipe { zs => Vec(zs: _*) }
+      .pipe(Vec.apply)
   }
 
   def -(v: Vec): Vec =
@@ -74,6 +74,6 @@ object Vec {
   def zero(n: Int): Vec =
     LazyList
       .fill(n)(Complex.zero)
-      .pipe { zs => Vec(zs: _*) }
+      .pipe(Vec.apply)
 
 }

@@ -10,7 +10,7 @@ object ComplexTest extends SimpleTestSuite {
 
   implicit val error: Threshold = 0.04
 
-  val random : Random = new Random()
+  val random: Random = new Random()
 
   test("Addition") {
     assert(
@@ -41,8 +41,9 @@ object ComplexTest extends SimpleTestSuite {
     assert(
       Complex(5, 2)
         .inverse
-        .pipe { case Some(z) =>
-          z =~ Complex(5.0 / 29, -2.0 / 29)
+        .get
+        .pipe {
+          _ =~ Complex(5.0 / 29, -2.0 / 29)
         }
     )
   }
@@ -51,9 +52,10 @@ object ComplexTest extends SimpleTestSuite {
     assert(
       {
         Complex(3, 2) / Complex(0, 2)
-      }.pipe { case Some(z) =>
-        z =~ Complex(1, -3.0 / 2)
-      }
+      }.get
+        .pipe {
+          _ =~ Complex(1, -3.0 / 2)
+        }
     )
   }
 
