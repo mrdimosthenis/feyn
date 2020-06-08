@@ -72,7 +72,7 @@ object VecTest extends SimpleTestSuite {
 
   test("Inner product properties") {
     val z = random.nextComplex()
-    val n = random.nextInt(10)
+    val n = random.nextInt(10) + 1
     val v1 = random.nextVec(n)
     val v2 = random.nextVec(n)
     val v3 = random.nextVec(n)
