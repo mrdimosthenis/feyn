@@ -24,17 +24,77 @@ object MatrixTest extends SimpleTestSuite {
     )
   }
 
-  test("Outer product (of vectors) properties") {
+  test("Addition") {
+    val a1 = Matrix(
+      Vec(Complex(0, 1), Complex(1, 1)),
+      Vec(Complex(2, -3), 4.toComplex)
+    )
+    val a2 = Matrix(
+      Vec(Complex(0, 2), Complex.zero),
+      Vec(Complex(0, 1), Complex(1, 2))
+    )
+    val res = Matrix(
+      Vec(Complex(0, 3), Complex(1, 1)),
+      Vec(Complex(2, -2), Complex(5, 2))
+    )
+    assert(
+      a1 + a2 == res
+    )
+  }
+
+  test("Multiplication") {
+    val a1 = Matrix(
+      Vec(Complex(0, 2), Complex.zero),
+      Vec(Complex(0, 1), Complex(1, 2))
+    )
+    val a2 = Matrix(
+      Vec(Complex(0, 1), Complex(1, 1)),
+      Vec(Complex(2, -3), 4.toComplex)
+    )
+    val res = Matrix(
+      Vec(Complex(-2, 0), Complex(-2, 2)),
+      Vec(Complex(7, 1), Complex(3, 9))
+    )
+    assert(
+      a1 * a2 == res
+    )
+  }
+
+  test("Conjugate transpose") {
+    val a = Matrix(
+      Vec(Complex(3, 7), Complex.zero),
+      Vec(Complex(0, 2), Complex(4, -1))
+    )
+    val res = Matrix(
+      Vec(Complex(3, -7), Complex(0, -2)),
+      Vec(Complex.zero, Complex(4, 1))
+    )
+    assert(
+      a.transjugate == res
+    )
+  }
+
+  test("Conjugate transpose properties of square matrices") {
     val z = random.nextComplex()
     val n = random.nextInt(10) + 1
-    val v1 = random.nextVec(n)
-    val v2 = random.nextVec(n)
-    val v3 = random.nextVec(n)
+    val a1 = random.nextMatrix(n, n)
+    val a2 = random.nextMatrix(n, n)
 
-//    assert(
-//      (v1 ** v2).transposed =~ v2 ** v1
-//    )
+    assert(
+      a1.transjugate.transjugate =~ a1
+    )
 
+    assert(
+      (a1 + a2).transjugate =~ a1.transjugate + a2.transjugate
+    )
+
+    assert(
+      (z * a1).transjugate =~ z.conjugate * a1.transjugate
+    )
+
+    assert(
+      (a1 * a2).transjugate =~ a2.transjugate * a1.transjugate
+    )
   }
 
 }

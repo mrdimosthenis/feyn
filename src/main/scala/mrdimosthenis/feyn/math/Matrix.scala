@@ -74,11 +74,14 @@ case class Matrix(rows: Vec*) {
   def *(a: Matrix): Matrix = {
     if (dims._2 != a.dims._1)
       throw new Exception("Matrix multiplication of non-matching dimensions")
-    transposed.lazyColumns.map { row =>
-      a.lazyColumns
+    lazyColumns.map { row =>
+      a.transjugate
+        .lazyColumns
         .map(v => row * v)
-    }.map(Vec.apply)
-  }.pipe(Matrix.apply)
+    }
+      .map(Vec.apply)
+      .pipe(Matrix.apply)
+  }
 
   def ==(a: Matrix): Boolean = {
     exceptDiffDims(a)
