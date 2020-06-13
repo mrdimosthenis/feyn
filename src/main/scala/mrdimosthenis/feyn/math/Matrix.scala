@@ -10,15 +10,15 @@ case class Matrix(rows: Vec*) {
     if (dims != a.dims)
       throw new Exception("Matrices of different dimensions")
 
-  val lazyColumns: LazyList[Vec] =
+  val lazyRows: LazyList[Vec] =
     rows.to(LazyList)
 
   override def toString: String = {
-    val maxCompLength = lazyColumns
+    val maxCompLength = lazyRows
       .flatMap(_.lazyComponents)
       .map(_.toString.length)
       .max
-    lazyColumns.map { v =>
+    lazyRows.map { v =>
       v.lazyComponents
         .map { z =>
           (maxCompLength - z.toString.length)
@@ -33,24 +33,24 @@ case class Matrix(rows: Vec*) {
     val m = rows.head.dim
     if (rows.tail.exists(_.dim != m))
       throw new Exception("Matrix with columns of different dimension")
-    val n = lazyColumns.length
+    val n = lazyRows.length
     (m, n)
   }
 
   def opposite: Matrix =
-    lazyColumns
+    lazyRows
       .map(_.opposite)
       .pipe(Matrix.apply)
 
   def transposed: Matrix =
-    lazyColumns
+    lazyRows
       .map(_.lazyComponents)
       .transpose
       .map(Vec.apply)
       .pipe(Matrix.apply)
 
   def transjugate: Matrix =
-    lazyColumns
+    lazyRows
       .map { v =>
         v.lazyComponents
           .map(_.conjugate)
@@ -60,8 +60,8 @@ case class Matrix(rows: Vec*) {
 
   def +(a: Matrix): Matrix = {
     exceptDiffDims(a)
-    lazyColumns
-      .zip(a.lazyColumns)
+    lazyRows
+      .zip(a.lazyRows)
       .map { case (v1, v2) => v1 + v2 }
       .pipe(Matrix.apply)
   }
@@ -74,9 +74,9 @@ case class Matrix(rows: Vec*) {
   def *(a: Matrix): Matrix = {
     if (dims._2 != a.dims._1)
       throw new Exception("Matrix multiplication of non-matching dimensions")
-    lazyColumns.map { row =>
+    lazyRows.map { row =>
       a.transjugate
-        .lazyColumns
+        .lazyRows
         .map(v => row * v)
     }
       .map(Vec.apply)
@@ -85,15 +85,15 @@ case class Matrix(rows: Vec*) {
 
   def ==(a: Matrix): Boolean = {
     exceptDiffDims(a)
-    lazyColumns
-      .zip(a.lazyColumns)
+    lazyRows
+      .zip(a.lazyRows)
       .forall(z => z._1 == z._2)
   }
 
   def =~(a: Matrix)(implicit error: Threshold): Boolean = {
     exceptDiffDims(a)
-    lazyColumns
-      .zip(a.lazyColumns)
+    lazyRows
+      .zip(a.lazyRows)
       .forall(x => x._1 =~ x._2)
   }
 
@@ -108,7 +108,7 @@ object Matrix {
 
   def id(m: Int, n: Int): Matrix =
     zero(m, n)
-      .lazyColumns
+      .lazyRows
       .zipWithIndex
       .map { case (v, i) =>
         v.lazyComponents.zipWithIndex.map { case (x, j) =>

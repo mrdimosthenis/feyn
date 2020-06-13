@@ -40,7 +40,7 @@ object extensions {
 
     def nextMatrix(m: Int, n: Int): Matrix =
       Matrix.zero(m, n)
-        .lazyColumns
+        .lazyRows
         .map(_ => random.nextVec(m))
         .pipe(Matrix.apply)
 
@@ -54,7 +54,7 @@ object extensions {
         .pipe(Vec.apply)
 
     def *(a: Matrix): Matrix =
-      a.lazyColumns
+      a.lazyRows
         .map(z * _)
         .pipe(Matrix.apply)
 
