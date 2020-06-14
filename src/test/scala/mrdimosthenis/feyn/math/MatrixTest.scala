@@ -117,19 +117,33 @@ object MatrixTest extends SimpleTestSuite {
     )
   }
 
-  /*test("Tensor product properties") {
+  test("Tensor product properties") {
     val z = random.nextComplex()
-    val k = random.nextInt(10) + 1
-    val l = random.nextInt(10) + 1
-    val m = random.nextInt(10) + 1
-    val n = random.nextInt(10) + 1
-    val a1 = random.nextMatrix(k, l)
-    val a2 = random.nextMatrix(m, n)
-    val a3 = random.nextMatrix(m, n)
+    val m1 = random.nextInt(10) + 1
+    val n1 = random.nextInt(10) + 1
+    val m2 = random.nextInt(10) + 1
+    val n2 = random.nextInt(10) + 1
+    val a1 = random.nextMatrix(m1, n1)
+    val a2 = random.nextMatrix(m2, n2)
+    val a3 = random.nextMatrix(m1, n1)
+    val a4 = random.nextMatrix(m2, n2)
 
     assert(
-      a1 ** (a2 + a3) =~ a1 ** a2
+      (a1 ** a2).transposed =~ a1.transposed ** a2.transposed
     )
-  }*/
+    assert(
+      (a1 ** a2).transjugate =~ a1.transjugate ** a2.transjugate
+    )
+    assert(
+      z * (a1 ** a2) =~ (z * a1) ** a2 &&
+        z * (a1 ** a2) =~ a1 ** (z * a2)
+    )
+    assert(
+      (a1 + a3) ** a2 =~ a1 ** a2 + a3 ** a2
+    )
+    assert(
+      a1 ** (a2 + a4) =~ a1 ** a2 + a1 ** a4
+    )
+  }
 
 }
