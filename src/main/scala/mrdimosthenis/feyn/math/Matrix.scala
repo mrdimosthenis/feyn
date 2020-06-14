@@ -83,6 +83,28 @@ case class Matrix(rows: Vec*) {
       .pipe(Matrix.apply)
   }
 
+  def **(a: Matrix): Matrix = {
+    def f1(a1: LazyList[LazyList[Complex]], z: Complex):
+    LazyList[LazyList[Complex]] =
+      a1.map { v =>
+        v.map(_ * z)
+      }
+
+    def f2(a1: LazyList[LazyList[Complex]],
+           a2: LazyList[LazyList[Complex]]):
+    LazyList[LazyList[Complex]] =
+      a1.flatMap { v =>
+        v.map(f1(a2, _))
+      }.map(_.transpose.flatten)
+
+    val b1 = lazyRows.map(_.lazyComponents)
+    val b2 = a.lazyRows.map(_.lazyComponents)
+
+    f2(b1, b2)
+      .map(Vec.apply)
+      .pipe(Matrix.apply)
+  }
+
   def ==(a: Matrix): Boolean = {
     exceptDiffDims(a)
     lazyRows
