@@ -117,4 +117,19 @@ object MatrixTest extends SimpleTestSuite {
     )
   }
 
+  /*test("Tensor product properties") {
+    val z = random.nextComplex()
+    val k = random.nextInt(10) + 1
+    val l = random.nextInt(10) + 1
+    val m = random.nextInt(10) + 1
+    val n = random.nextInt(10) + 1
+    val a1 = random.nextMatrix(k, l)
+    val a2 = random.nextMatrix(m, n)
+    val a3 = random.nextMatrix(m, n)
+
+    assert(
+      a1 ** a2 =~ a1 ** a2
+    )
+  }*/
+
 }
