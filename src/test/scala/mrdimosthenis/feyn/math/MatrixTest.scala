@@ -128,7 +128,7 @@ object MatrixTest extends SimpleTestSuite {
     val a3 = random.nextMatrix(m, n)
 
     assert(
-      a1 ** a2 =~ a1 ** a2
+      a1 ** (a2 + a3) =~ a1 ** a2
     )
   }*/
 

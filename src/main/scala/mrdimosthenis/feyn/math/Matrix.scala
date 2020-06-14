@@ -84,8 +84,8 @@ case class Matrix(rows: Vec*) {
   }
 
   def **(a: Matrix): Matrix = {
-    val (m, n) = dims
-    val (p, q) = a.dims
+    val (m1, n1) = dims
+    val (m2, n2) = a.dims
 
     def toNestedArray(b: Matrix): Array[Array[Complex]] =
       b.lazyRows
@@ -95,22 +95,22 @@ case class Matrix(rows: Vec*) {
     def kroneckerProduct(matrix1: Array[Array[Complex]],
                          matrix2: Array[Array[Complex]]):
     Array[Array[Complex]] = {
-      val array = Array.ofDim[Complex](n * q, m * p)
+      val array = Array.ofDim[Complex](n1 * n2, m1 * m2)
       for {
-        i <- 0 until n
-        j <- 0 until m
-        k <- 0 until q
-        l <- 0 until p
+        i <- 0 until n1
+        j <- 0 until m1
+        k <- 0 until n2
+        l <- 0 until m2
       } {
-        array(q * i + k)(p * j + l) = matrix1(i)(j) * matrix2(k)(l)
+        array(n2 * i + k)(m2 * j + l) = matrix1(i)(j) * matrix2(k)(l)
       }
       array
     }
 
-    val m1 = toNestedArray(this)
-    val m2 = toNestedArray(a)
-
-    kroneckerProduct(m1, m2)
+    kroneckerProduct(
+      toNestedArray(this),
+      toNestedArray(a)
+    )
       .to(LazyList)
       .map { array =>
         array.to(LazyList)
