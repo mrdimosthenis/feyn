@@ -49,7 +49,7 @@ case class Complex(re: Double, im: Double) {
 
 object Complex {
 
-  def zero: Complex = Complex(0.0, 0.0)
+  def zero: Complex = 0.toComplex
 
   def fromPolar(r: Double, theta: Double): Complex = {
     val re = r * Math.cos(theta)

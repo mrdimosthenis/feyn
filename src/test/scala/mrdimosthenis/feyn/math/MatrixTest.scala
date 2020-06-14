@@ -60,6 +60,26 @@ object MatrixTest extends SimpleTestSuite {
     )
   }
 
+  test("Tensor product") {
+    val a1 = Matrix(
+      Vec(1.toComplex, 2.toComplex),
+      Vec(3.toComplex, 4.toComplex)
+    )
+    val a2 = Matrix(
+      Vec(Complex.zero, 5.toComplex),
+      Vec(6.toComplex, 7.toComplex)
+    )
+    val res = Matrix(
+      Vec(Complex.zero, 5.toComplex, Complex.zero, 10.toComplex),
+      Vec(6.toComplex, 7.toComplex, 12.toComplex, 14.toComplex),
+      Vec(Complex.zero, 15.toComplex, Complex.zero, 20.toComplex),
+      Vec(18.toComplex, 21.toComplex, 24.toComplex, 28.toComplex),
+    )
+    assert(
+      a1 ** a2 == res
+    )
+  }
+
   test("Conjugate transpose") {
     val a = Matrix(
       Vec(Complex(3, 7), Complex.zero),
