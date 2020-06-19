@@ -141,8 +141,8 @@ object Matrix {
       .fill(n)(Vec.zero(m))
       .pipe(Matrix.apply)
 
-  def id(m: Int, n: Int): Matrix =
-    zero(m, n)
+  def id(n: Int): Matrix =
+    zero(n, n)
       .lazyRows
       .zipWithIndex
       .map { case (v, i) =>
