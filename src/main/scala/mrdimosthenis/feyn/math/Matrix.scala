@@ -6,7 +6,7 @@ import scala.util.chaining._
 
 case class Matrix(rows: Vec*) {
 
-  def exceptDiffDims(a: Matrix): Unit =
+  private def exceptDiffDims(a: Matrix): Unit =
     if (dims != a.dims)
       throw new Exception("Matrices of different dimensions")
 

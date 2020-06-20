@@ -6,7 +6,7 @@ import scala.util.chaining._
 
 case class Vec(components: Complex*) {
 
-  def exceptDiffDims(v: Vec): Unit =
+  private def exceptDiffDims(v: Vec): Unit =
     if (dim != v.dim)
       throw new Exception("Vectors of different dimension")
 

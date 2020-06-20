@@ -13,7 +13,7 @@ case class QState(matrix: Matrix) {
       .sqrt(matrix.lazyRows.length)
       .toInt
 
-  def exceptInvalidIndex(k: Int): Unit =
+  private def exceptInvalidIndex(k: Int): Unit =
     if (k < 0 || k >= size)
       throw new Exception("Invalid state index")
 
