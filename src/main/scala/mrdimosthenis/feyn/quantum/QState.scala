@@ -2,20 +2,41 @@ package mrdimosthenis.feyn.quantum
 
 import mrdimosthenis.feyn.math._
 import mrdimosthenis.feyn.math.extensions._
+import mrdimosthenis.feyn.quantum.gates._
 
 import scala.util.chaining._
 
-case class QState(matrix: Matrix)
+case class QState(matrix: Matrix) {
+
+  val size: Int =
+    Math
+      .sqrt(matrix.lazyRows.length)
+      .toInt
+
+  def exceptInvalidIndex(k: Int): Unit =
+    if (k < 0 || k >= size)
+      throw new Exception("Invalid state index")
+
+  def getThrough(gate: Q1Gate, k: Int): QState = {
+    exceptInvalidIndex(k)
+    LazyList
+      .fill(size)(Q1Gate.id)
+      .updated(k, gate)
+      .foldLeft(Matrix.id(1)) { (acc, g) =>
+        acc ** g.matrix
+      }
+      .pipe(matrix ** _)
+      .pipe(QState.apply)
+  }
+
+}
 
 object QState {
-
-  private val trivialState =
-    Matrix(Vec(1.toComplex))
 
   def init(n: Int): QState =
     LazyList
       .fill(n)(Qubit.zero)
-      .foldLeft(trivialState) { (acc, qubit) =>
+      .foldLeft(Matrix.id(1)) { (acc, qubit) =>
         acc ** Matrix(qubit.toVec)
       }
       .transposed
@@ -23,7 +44,7 @@ object QState {
 
   def fromQubits(qubits: Qubit*): QState =
     qubits
-      .foldLeft(trivialState) { (acc, qubit) =>
+      .foldLeft(Matrix.id(1)) { (acc, qubit) =>
         acc ** Matrix(qubit.toVec)
       }
       .transposed
