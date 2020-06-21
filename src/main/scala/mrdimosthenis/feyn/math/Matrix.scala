@@ -30,8 +30,8 @@ case class Matrix(rows: Vec*) {
   }
 
   def dims: (Int, Int) = {
-    val m = rows.head.dim
-    if (rows.tail.exists(_.dim != m))
+    val m = lazyRows.head.dim
+    if (lazyRows.tail.exists(_.dim != m))
       throw new Exception("Matrix with columns of different dimension")
     val n = lazyRows.length
     (m, n)
@@ -57,6 +57,11 @@ case class Matrix(rows: Vec*) {
       }.map(Vec.apply)
       .pipe(Matrix.apply)
       .transposed
+
+  def vecExpansion: Vec =
+    lazyRows
+      .flatMap(_.lazyComponents)
+      .pipe(Vec.apply)
 
   def +(a: Matrix): Matrix = {
     exceptDiffDims(a)

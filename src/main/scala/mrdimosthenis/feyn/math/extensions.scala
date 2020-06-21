@@ -70,6 +70,9 @@ object extensions {
             .pipe(Vec.apply)
         }.pipe(Matrix.apply)
 
+    def toVerticalMatrix: Matrix =
+      Matrix(v).transposed
+
   }
 
 }
