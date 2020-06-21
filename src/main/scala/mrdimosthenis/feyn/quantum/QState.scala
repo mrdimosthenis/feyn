@@ -48,6 +48,12 @@ case class QState(vec: Vec) {
       .pipe { a => QState(a.vecExpansion) }
   }
 
+  def equal(qState: QState): Boolean =
+    vec == qState.vec
+
+  def almostEqual(qState: QState)(implicit error: Threshold): Boolean =
+    vec == qState.vec
+
 }
 
 object QState {
