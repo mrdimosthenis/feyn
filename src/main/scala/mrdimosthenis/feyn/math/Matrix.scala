@@ -77,7 +77,7 @@ case class Matrix(rows: Vec*) {
   }
 
   def *(a: Matrix): Matrix = {
-    if (dims._2 != a.dims._1)
+    if (dims._1 != a.dims._2)
       throw new Exception("Matrix multiplication of non-matching dimensions")
     lazyRows.map { row =>
       a.transjugate

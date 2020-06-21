@@ -44,9 +44,7 @@ case class QState(vec: Vec) {
       .foldLeft(Matrix.id(1)) { (acc, g) =>
         acc ** g.matrix
       }
-      .pipe {
-        vec.toVerticalMatrix * _
-      }
+      .pipe(_ * vec.toVerticalMatrix)
       .pipe { a => QState(a.vecExpansion) }
   }
 
