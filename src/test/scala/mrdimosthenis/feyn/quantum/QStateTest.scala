@@ -24,7 +24,7 @@ object QStateTest extends SimpleTestSuite {
     )
   }
 
-  test("Not is its own inverse property") {
+  test("NOT is its own inverse property") {
     val size = random.nextInt(3) + 1
     val k = random.nextInt(size)
     val qState = random.nextQState(size)
@@ -33,6 +33,31 @@ object QStateTest extends SimpleTestSuite {
       qState
         .getThrough(Q1Gate.x, k)
         .getThrough(Q1Gate.x, k)
+
+    assert(
+      qState almostEqual res
+    )
+  }
+
+  test("HAD gate on single qubit state") {
+    val initQState = QState.init(1)
+    val resQState = QState(
+      Vec(0.7071.toComplex, 0.7071.toComplex)
+    )
+    assert(
+      initQState.getThrough(Q1Gate.h, 0) almostEqual resQState
+    )
+  }
+
+  test("HAD is its own inverse property") {
+    val size = random.nextInt(3) + 1
+    val k = random.nextInt(size)
+    val qState = random.nextQState(size)
+
+    val res =
+      qState
+        .getThrough(Q1Gate.h, k)
+        .getThrough(Q1Gate.h, k)
 
     assert(
       qState almostEqual res
