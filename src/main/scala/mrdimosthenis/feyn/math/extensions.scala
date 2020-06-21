@@ -7,7 +7,7 @@ object extensions {
 
   type Threshold = Double
 
-  implicit class DoubleExtension(val x: Double) {
+  implicit class MathDoubleExtension(val x: Double) {
 
     val toComplex: Complex =
       Complex(x, 0.0)
@@ -27,7 +27,7 @@ object extensions {
 
   }
 
-  implicit class RandomExtension(val random: Random) {
+  implicit class MathRandomExtension(val random: Random) {
 
     def nextComplex(): Complex =
       Complex(random.nextDouble(), random.nextDouble())
@@ -46,7 +46,7 @@ object extensions {
 
   }
 
-  implicit class ComplexExtension(val z: Complex) {
+  implicit class MathComplexExtension(val z: Complex) {
 
     def *(v: Vec): Vec =
       v.lazyComponents
@@ -60,7 +60,7 @@ object extensions {
 
   }
 
-  implicit class VecExtension(val v: Vec) {
+  implicit class MathVecExtension(val v: Vec) {
 
     def **(u: Vec): Matrix =
       v.lazyComponents
