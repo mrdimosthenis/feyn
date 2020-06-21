@@ -52,7 +52,7 @@ case class QState(vec: Vec) {
     vec == qState.vec
 
   def almostEqual(qState: QState)(implicit error: Threshold): Boolean =
-    vec == qState.vec
+    vec =~ qState.vec
 
 }
 
