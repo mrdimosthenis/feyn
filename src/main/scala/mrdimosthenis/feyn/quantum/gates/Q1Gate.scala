@@ -26,11 +26,40 @@ object Q1Gate {
       Vec(Complex(0, 1), Complex.zero)
     ).pipe(Q1Gate.apply)
 
-  def z: Q1Gate =
+  def r(theta: Double): Q1Gate = {
+    val z = Complex(
+      Math.cos(theta),
+      Math.sin(theta)
+    )
     Matrix(
       Vec(1.toComplex, Complex.zero),
-      Vec(Complex.zero, Complex(-1, 0))
+      Vec(Complex.zero, z)
     ).pipe(Q1Gate.apply)
+  }
+
+  def z: Q1Gate =
+    r(Math.PI)
+
+  def t: Q1Gate =
+    r(Math.PI / 4)
+
+  def rx(theta: Double): Q1Gate ={
+    val cosZ = Math.cos(theta / 2).toComplex
+    val sinZ = Complex(0, -Math.sin(theta / 2))
+    Matrix(
+      Vec(cosZ, sinZ),
+      Vec(sinZ, cosZ)
+    ).pipe(Q1Gate.apply)
+  }
+
+  def ry(theta: Double): Q1Gate ={
+    val cosZ = Math.cos(theta / 2).toComplex
+    val sinZ = Math.sin(theta / 2).toComplex
+    Matrix(
+      Vec(cosZ, Complex.zero - sinZ),
+      Vec(sinZ, cosZ)
+    ).pipe(Q1Gate.apply)
+  }
 
   def h: Q1Gate = {
     val matrix = Matrix(
@@ -46,16 +75,5 @@ object Q1Gate {
       Vec(1.toComplex, Complex.zero),
       Vec(Complex.zero, Complex(0, 1))
     ).pipe(Q1Gate.apply)
-
-  def t: Q1Gate = {
-    val z = Complex(
-      Math.cos(Math.PI / 4),
-      Math.sin(Math.PI / 4)
-    )
-    Matrix(
-      Vec(1.toComplex, Complex.zero),
-      Vec(Complex.zero, z)
-    ).pipe(Q1Gate.apply)
-  }
 
 }

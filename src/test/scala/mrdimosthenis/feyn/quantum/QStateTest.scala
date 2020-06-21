@@ -20,7 +20,9 @@ object QStateTest extends SimpleTestSuite {
       Vec(Complex.zero, 1.toComplex)
     )
     assert(
-      initQState.getThrough(Q1Gate.x, 0) equal resQState
+      initQState
+        .getThrough(Q1Gate.x, 0)
+        equal resQState
     )
   }
 
@@ -45,7 +47,9 @@ object QStateTest extends SimpleTestSuite {
       Vec(0.7071.toComplex, 0.7071.toComplex)
     )
     assert(
-      initQState.getThrough(Q1Gate.h, 0) almostEqual resQState
+      initQState
+        .getThrough(Q1Gate.h, 0)
+        almostEqual resQState
     )
   }
 
@@ -61,6 +65,52 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState almostEqual res
+    )
+  }
+
+  test("PHASE gate on single qubit state") {
+    val initQState = QState.init(1).getThrough(Q1Gate.h, 0)
+    val resQState = QState(
+      Vec(0.7071.toComplex, Complex(0.6533, 0.2706))
+    )
+    assert(
+      initQState
+        .getThrough(Q1Gate.r(Math.PI / 8), 0)
+        almostEqual resQState
+    )
+  }
+
+  test("ROTX and ROTY gates on single qubit states") {
+    assert(
+      QState.fromQubits(Qubit.zero)
+        .getThrough(Q1Gate.rx(Math.PI / 8), 0)
+        almostEqual QState(
+        Vec(0.9808.toComplex, Complex(0, -0.1951))
+      )
+    )
+
+    assert(
+      QState.fromQubits(Qubit.one)
+        .getThrough(Q1Gate.rx(Math.PI / 8), 0)
+        almostEqual QState(
+        Vec(Complex(0, -0.1951), 0.9808.toComplex)
+      )
+    )
+
+    assert(
+      QState.fromQubits(Qubit.zero)
+        .getThrough(Q1Gate.ry(Math.PI / 8), 0)
+        almostEqual QState(
+        Vec(0.9808.toComplex, 0.1951.toComplex)
+      )
+    )
+
+    assert(
+      QState.fromQubits(Qubit.one)
+        .getThrough(Q1Gate.ry(Math.PI / 8), 0)
+        almostEqual QState(
+        Vec(Complex(-0.1951, 0), 0.9808.toComplex)
+      )
     )
   }
 
