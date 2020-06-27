@@ -17,13 +17,18 @@ object Q2Gate {
       Vec(Complex.zero, Complex.zero, 1.toComplex, Complex.zero)
     ).pipe(Q2Gate.apply)
 
-  def cZ: Q2Gate =
+  def cPhase(degrees: Double): Q2Gate = {
+    val z = Complex(
+      Math.cos(degrees.toRadians),
+      Math.sin(degrees.toRadians)
+    )
     Matrix(
       Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
       Vec(Complex.zero, 1.toComplex, Complex.zero, Complex.zero),
       Vec(Complex.zero, Complex.zero, 1.toComplex, Complex.zero),
-      Vec(Complex.zero, Complex.zero, Complex.zero, Complex(-1, 0))
+      Vec(Complex.zero, Complex.zero, Complex.zero, z)
     ).pipe(Q2Gate.apply)
+  }
 
   def swap: Q2Gate =
     Matrix(

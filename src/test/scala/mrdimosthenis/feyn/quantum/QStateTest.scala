@@ -17,7 +17,7 @@ object QStateTest extends SimpleTestSuite {
 
   // Get through q1Gates
 
-  test("Not gate on single qubit state") {
+  test("NOT gate on single qubit state") {
     assert(
       QState
         .init(1)
@@ -156,7 +156,7 @@ object QStateTest extends SimpleTestSuite {
 
   // Get through q2Gates
 
-  test("HAd and CNot gate on two qubits") {
+  test("HAD and CNOT gate on two qubits") {
     assert(
       QState
         .init(2)
@@ -170,6 +170,35 @@ object QStateTest extends SimpleTestSuite {
           0.7071.toComplex
         )
       )
+    )
+  }
+
+  test("HAD-CNOT-HAD equals CPHASE(180) property on two qubits") {
+    val qState = random.nextQState(2)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.had, 1)
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q1Gate.had, 1)
+        almostEqual qState
+        .getThrough(Q2Gate.cPhase(180), (0, 1))
+    )
+  }
+
+  test("HAD-CNOT-HAD equals CPHASE(180) property on multiple qubits") {
+    val size = random.nextInt(3) + 3
+    val i = random.nextInt(size - 1)
+    val j = random.nextInt(size - i - 1) + i + 1
+    val qState = random.nextQState(size)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.had, j)
+        .getThrough(Q2Gate.cNot, (i, j))
+        .getThrough(Q1Gate.had, j)
+        almostEqual qState
+        .getThrough(Q2Gate.cPhase(180), (i, j))
     )
   }
 
