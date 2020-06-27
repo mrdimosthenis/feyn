@@ -9,7 +9,7 @@ case class Q2Gate(matrix: Matrix) extends Gate
 
 object Q2Gate {
 
-  def cnot: Q2Gate =
+  def cNot: Q2Gate =
     Matrix(
       Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
       Vec(Complex.zero, 1.toComplex, Complex.zero, Complex.zero),
@@ -17,7 +17,7 @@ object Q2Gate {
       Vec(Complex.zero, Complex.zero, 1.toComplex, Complex.zero)
     ).pipe(Q2Gate.apply)
 
-  def cz: Q2Gate =
+  def cZ: Q2Gate =
     Matrix(
       Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
       Vec(Complex.zero, 1.toComplex, Complex.zero, Complex.zero),

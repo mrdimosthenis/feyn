@@ -15,6 +15,8 @@ object QStateTest extends SimpleTestSuite {
 
   val random: Random = new Random()
 
+  // Get through q1Gates
+
   test("Not gate on single qubit state") {
     assert(
       QState
@@ -149,6 +151,25 @@ object QStateTest extends SimpleTestSuite {
         .getThrough(Q1Gate.rootOfNot, k)
         almostEqual qState
         .getThrough(Q1Gate.not, k)
+    )
+  }
+
+  // Get through q2Gates
+
+  test("HAd and CNot gate on two qubits") {
+    assert(
+      QState
+        .init(2)
+        .getThrough(Q1Gate.had, 0)
+        .getThrough(Q2Gate.cNot, (0, 1))
+        almostEqual QState(
+        Vec(
+          0.7071.toComplex,
+          Complex.zero,
+          Complex.zero,
+          0.7071.toComplex
+        )
+      )
     )
   }
 

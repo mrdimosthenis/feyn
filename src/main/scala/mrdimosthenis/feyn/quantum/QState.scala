@@ -105,7 +105,7 @@ case class QState(vec: Vec) {
       throw new Exception("Invalid indices for q2 gate")
     exceptInvalidIndex(ks._1)
     exceptInvalidIndex(ks._2)
-    if (ks._2 == ks._1) applyBaseQ2Gate(ks._1, q2Gate)
+    if (ks._2 == ks._1 + 1) applyBaseQ2Gate(ks._1, q2Gate)
     else {
       val distance = ks._2 - ks._1
       this
