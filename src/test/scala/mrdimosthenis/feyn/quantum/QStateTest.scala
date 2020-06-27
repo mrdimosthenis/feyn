@@ -67,7 +67,7 @@ object QStateTest extends SimpleTestSuite {
       QState
         .init(1)
         .getThrough(Q1Gate.had, 0)
-        .getThrough(Q1Gate.phase45, 0)
+        .getThrough(Q1Gate.phase(45), 0)
         almostEqual QState(
         Vec(0.7071.toComplex, Complex(0.5, 0.5))
       )
@@ -116,7 +116,7 @@ object QStateTest extends SimpleTestSuite {
     assert(
       qState
         .getThrough(Q1Gate.had, k)
-        .getThrough(Q1Gate.phase180, k)
+        .getThrough(Q1Gate.phase(180), k)
         .getThrough(Q1Gate.had, k)
         almostEqual qState
         .getThrough(Q1Gate.not, k)
@@ -134,7 +134,7 @@ object QStateTest extends SimpleTestSuite {
         .getThrough(Q1Gate.not, k)
         .getThrough(Q1Gate.had, k)
         almostEqual qState
-        .getThrough(Q1Gate.phase180, k)
+        .getThrough(Q1Gate.phase(180), k)
     )
   }
 

@@ -27,7 +27,7 @@ object Q1Gate {
 
   def rootOfNot: Q1Gate =
     had
-      .followedBy(phase90)
+      .followedBy(phase(90))
       .followedBy(had)
 
   def pauliY: Q1Gate =
@@ -36,25 +36,16 @@ object Q1Gate {
       Vec(Complex(0, 1), Complex.zero)
     ).pipe(Q1Gate.apply)
 
-  def phase(theta: Double): Q1Gate = {
+  def phase(degrees: Double): Q1Gate = {
     val z = Complex(
-      Math.cos(theta),
-      Math.sin(theta)
+      Math.cos(degrees.toRadians),
+      Math.sin(degrees.toRadians)
     )
     Matrix(
       Vec(1.toComplex, Complex.zero),
       Vec(Complex.zero, z)
     ).pipe(Q1Gate.apply)
   }
-
-  def phase45: Q1Gate =
-    phase(Math.PI / 4)
-
-  def phase90: Q1Gate =
-    phase(Math.PI / 2)
-
-  def phase180: Q1Gate =
-    phase(Math.PI)
 
   def rotX(theta: Double): Q1Gate ={
     val cosZ = Math.cos(theta / 2).toComplex
