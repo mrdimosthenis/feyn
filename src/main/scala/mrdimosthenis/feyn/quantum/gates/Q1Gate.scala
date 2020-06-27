@@ -5,7 +5,12 @@ import mrdimosthenis.feyn.math.extensions._
 
 import scala.util.chaining._
 
-case class Q1Gate(matrix: Matrix) extends Gate
+case class Q1Gate(matrix: Matrix) extends Gate {
+
+  def followedBy(q1Gate: Q1Gate): Q1Gate =
+    Q1Gate(q1Gate.matrix * matrix)
+
+}
 
 object Q1Gate {
 
@@ -14,13 +19,18 @@ object Q1Gate {
       .id(2)
       .pipe(Q1Gate.apply)
 
-  def x: Q1Gate =
+  def not: Q1Gate =
     Matrix(
       Vec(Complex.zero, 1.toComplex),
       Vec(1.toComplex, Complex.zero)
     ).pipe(Q1Gate.apply)
 
-  def y: Q1Gate =
+  def rootOfNot: Q1Gate =
+    had
+      .followedBy(phase90)
+      .followedBy(had)
+
+  def pauliY: Q1Gate =
     Matrix(
       Vec(Complex.zero, Complex(0, -1)),
       Vec(Complex(0, 1), Complex.zero)
@@ -37,11 +47,14 @@ object Q1Gate {
     ).pipe(Q1Gate.apply)
   }
 
-  def z: Q1Gate =
-    phase(Math.PI)
-
-  def t: Q1Gate =
+  def phase45: Q1Gate =
     phase(Math.PI / 4)
+
+  def phase90: Q1Gate =
+    phase(Math.PI / 2)
+
+  def phase180: Q1Gate =
+    phase(Math.PI)
 
   def rotX(theta: Double): Q1Gate ={
     val cosZ = Math.cos(theta / 2).toComplex
@@ -61,7 +74,7 @@ object Q1Gate {
     ).pipe(Q1Gate.apply)
   }
 
-  def h: Q1Gate = {
+  def had: Q1Gate = {
     val matrix = Matrix(
       Vec(1.toComplex, 1.toComplex),
       Vec(1.toComplex, Complex(-1, 0))
@@ -69,11 +82,5 @@ object Q1Gate {
     val coefficient = 1.0 / Math.sqrt(2)
     Q1Gate(coefficient * matrix)
   }
-
-  def s: Q1Gate =
-    Matrix(
-      Vec(1.toComplex, Complex.zero),
-      Vec(Complex.zero, Complex(0, 1))
-    ).pipe(Q1Gate.apply)
 
 }
