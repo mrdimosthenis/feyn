@@ -39,10 +39,10 @@ case class QState(vec: Vec) {
   def getThrough(gate: Q1Gate, k: Int): QState = {
     exceptInvalidIndex(k)
     LazyList
-      .fill(size)(Q1Gate.id)
-      .updated(k, gate)
-      .foldLeft(Matrix.id(1)) { (acc, g) =>
-        acc ** g.matrix
+      .fill(size)(Matrix.id(2))
+      .updated(k, gate.matrix)
+      .foldLeft(Matrix.id(1)) { (acc, a) =>
+        acc ** a
       }
       .pipe(_ * vec.toVerticalMatrix)
       .pipe { a => QState(a.vecExpansion) }
