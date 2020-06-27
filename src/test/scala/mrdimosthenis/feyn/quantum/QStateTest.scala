@@ -156,7 +156,7 @@ object QStateTest extends SimpleTestSuite {
 
   // Get through q2Gates
 
-  test("HAD and CNOT gate on two qubits") {
+  test("HAD and CNOT gates on two qubits") {
     assert(
       QState
         .init(2)
@@ -199,6 +199,39 @@ object QStateTest extends SimpleTestSuite {
         .getThrough(Q1Gate.had, j)
         almostEqual qState
         .getThrough(Q2Gate.cPhase(180), (i, j))
+    )
+  }
+
+  test("3xCNOT equals SWAP property on two qubits") {
+    val qState = random.nextQState(2)
+
+    assert(
+      qState
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q2Gate.swap, (0, 1))
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q2Gate.swap, (0, 1))
+        .getThrough(Q2Gate.cNot, (0, 1))
+        almostEqual qState
+        .getThrough(Q2Gate.swap, (0, 1))
+    )
+  }
+
+  test("3xCNOT equals SWAP property on multiple qubits") {
+    val size = random.nextInt(3) + 3
+    val i = random.nextInt(size - 1)
+    val j = random.nextInt(size - i - 1) + i + 1
+    val qState = random.nextQState(size)
+
+    assert(
+      qState
+        .getThrough(Q2Gate.cNot, (i, j))
+        .getThrough(Q2Gate.swap, (i, j))
+        .getThrough(Q2Gate.cNot, (i, j))
+        .getThrough(Q2Gate.swap, (i, j))
+        .getThrough(Q2Gate.cNot, (i, j))
+        almostEqual qState
+        .getThrough(Q2Gate.swap, (i, j))
     )
   }
 
