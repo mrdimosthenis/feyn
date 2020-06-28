@@ -105,6 +105,22 @@ case class QState(vec: Vec) {
       .moveFarApart(ks._1, distance)
   }
 
+  def getThrough(q3Gate: Q3Gate, ks: (Int, Int, Int)): QState = {
+    if (ks._1 >= ks._2 || ks._2 >= ks._3)
+      throw new Exception("Invalid indices for q3 gate")
+    exceptInvalidIndex(ks._1)
+    exceptInvalidIndex(ks._2)
+    exceptInvalidIndex(ks._3)
+    val distanceA = ks._2 - ks._1
+    val distanceB = ks._3 - ks._1
+    this
+      .getSideBySide(ks._1, distanceA)
+      .getSideBySide(ks._1 + 1, distanceB - 1)
+      .applyBaseQ3Gate(ks._1, q3Gate)
+      .moveFarApart(ks._1 + 1, distanceB - 1)
+      .moveFarApart(ks._1, distanceA)
+  }
+
   def equal(qState: QState): Boolean =
     vec == qState.vec
 

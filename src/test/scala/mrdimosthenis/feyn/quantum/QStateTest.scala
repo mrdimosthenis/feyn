@@ -235,4 +235,62 @@ object QStateTest extends SimpleTestSuite {
     )
   }
 
+  // Get through q3Gates
+
+  test("3xCCNOT equals CSWAP property on three qubits") {
+    val qState = random.nextQState(3)
+
+    assert(
+      qState
+
+        .getThrough(Q2Gate.swap, (1, 2))
+        .getThrough(Q3Gate.ccNot, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (1, 2))
+
+        .getThrough(Q2Gate.swap, (0, 2))
+        .getThrough(Q3Gate.ccNot, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (0, 2))
+
+        .getThrough(Q2Gate.swap, (1, 2))
+        .getThrough(Q3Gate.ccNot, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (1, 2))
+
+        almostEqual qState
+
+        .getThrough(Q2Gate.swap, (0, 2))
+        .getThrough(Q3Gate.cSwap, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (0, 2))
+    )
+  }
+
+  test("3xCCNOT equals CSWAP property on multiple qubits") {
+    val size = random.nextInt(4) + 4
+    val i = random.nextInt(size - 2)
+    val j = random.nextInt(size - i - 2) + i + 1
+    val k = random.nextInt(size - j - 1) + j + 1
+    val qState = random.nextQState(size)
+
+    assert(
+      qState
+
+        .getThrough(Q2Gate.swap, (j, k))
+        .getThrough(Q3Gate.ccNot, (i, j, k))
+        .getThrough(Q2Gate.swap, (j, k))
+
+        .getThrough(Q2Gate.swap, (i, k))
+        .getThrough(Q3Gate.ccNot, (i, j, k))
+        .getThrough(Q2Gate.swap, (i, k))
+
+        .getThrough(Q2Gate.swap, (j, k))
+        .getThrough(Q3Gate.ccNot, (i, j, k))
+        .getThrough(Q2Gate.swap, (j, k))
+
+        almostEqual qState
+
+        .getThrough(Q2Gate.swap, (i, k))
+        .getThrough(Q3Gate.cSwap, (i, j, k))
+        .getThrough(Q2Gate.swap, (i, k))
+    )
+  }
+
 }
