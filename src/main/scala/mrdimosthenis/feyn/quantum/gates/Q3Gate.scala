@@ -8,7 +8,7 @@ case class Q3Gate(matrix: Matrix) extends Gate
 
 object Q3Gate {
 
-  def toffoli: Q3Gate = {
+  def ccNot: Q3Gate = {
     val (first6Rows, last2Rows) =
       Matrix
         .id(8)
@@ -16,6 +16,20 @@ object Q3Gate {
         .splitAt(6)
     LazyList
       .concat(first6Rows, last2Rows.reverse)
+      .pipe(Matrix.apply)
+      .pipe(Q3Gate.apply)
+  }
+
+  def cSwap: Q3Gate = {
+    val (first5Rows, last3Rows) =
+      Matrix
+        .id(8)
+        .lazyRows
+        .splitAt(5)
+    val (lastRow, reversedButLastRows) =
+      last3Rows.reverse.splitAt(1)
+    LazyList
+      .concat(first5Rows, reversedButLastRows, lastRow)
       .pipe(Matrix.apply)
       .pipe(Q3Gate.apply)
   }
