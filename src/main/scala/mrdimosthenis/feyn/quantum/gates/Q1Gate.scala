@@ -30,12 +30,6 @@ object Q1Gate {
       .followedBy(phase(90))
       .followedBy(had)
 
-  def pauliY: Q1Gate =
-    Matrix(
-      Vec(Complex.zero, Complex(0, -1)),
-      Vec(Complex(0, 1), Complex.zero)
-    ).pipe(Q1Gate.apply)
-
   def phase(degrees: Double): Q1Gate = {
     val z = Complex(
       Math.cos(degrees.toRadians),
