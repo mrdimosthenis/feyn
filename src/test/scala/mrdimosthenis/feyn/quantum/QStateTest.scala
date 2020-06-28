@@ -235,6 +235,21 @@ object QStateTest extends SimpleTestSuite {
     )
   }
 
+  test("Constructed CPHASE property on two qubits") {
+    val qState = random.nextQState(2)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.phase(45), 1)
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q1Gate.phase(-45), 1)
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q1Gate.phase(45), 0)
+        almostEqual qState
+        .getThrough(Q2Gate.cPhase(90), (0, 1))
+    )
+  }
+
   // Get through q3Gates
 
   test("3xCCNOT equals CSWAP property on three qubits") {
