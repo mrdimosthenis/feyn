@@ -21,7 +21,7 @@ object QStateTest extends SimpleTestSuite {
     assert(
       QState
         .init(1)
-        .getThrough(Q1Gate.not, 0)
+        .getThrough(QGate.not, List(0))
         equal QState
         .fromQubits(Qubit.one)
     )
@@ -34,8 +34,8 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.not, k)
-        .getThrough(Q1Gate.not, k)
+        .getThrough(QGate.not, List(k))
+        .getThrough(QGate.not, List(k))
         almostEqual qState
     )
   }
@@ -44,7 +44,7 @@ object QStateTest extends SimpleTestSuite {
     assert(
       QState
         .init(1)
-        .getThrough(Q1Gate.had, 0)
+        .getThrough(QGate.had, List(0))
         almostEqual QState(
         Vec(0.7071.toComplex, 0.7071.toComplex)
       )
@@ -58,8 +58,8 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.had, k)
-        .getThrough(Q1Gate.had, k)
+        .getThrough(QGate.had, List(k))
+        .getThrough(QGate.had, List(k))
         almostEqual qState
     )
   }
@@ -68,8 +68,8 @@ object QStateTest extends SimpleTestSuite {
     assert(
       QState
         .init(1)
-        .getThrough(Q1Gate.had, 0)
-        .getThrough(Q1Gate.phase(45), 0)
+        .getThrough(QGate.had, List(0))
+        .getThrough(QGate.phase(45), List(0))
         almostEqual QState(
         Vec(0.7071.toComplex, Complex(0.5, 0.5))
       )
@@ -79,7 +79,7 @@ object QStateTest extends SimpleTestSuite {
   test("ROTX and ROTY gates on single qubit states") {
     assert(
       QState.fromQubits(Qubit.zero)
-        .getThrough(Q1Gate.rotX(Math.PI / 4), 0)
+        .getThrough(QGate.rotX(Math.PI / 4), List(0))
         almostEqual QState(
         Vec(0.9239.toComplex, Complex(0, -0.3827))
       )
@@ -87,7 +87,7 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       QState.fromQubits(Qubit.one)
-        .getThrough(Q1Gate.rotX(Math.PI / 4), 0)
+        .getThrough(QGate.rotX(Math.PI / 4), List(0))
         almostEqual QState(
         Vec(Complex(0, -0.3827), 0.9239.toComplex)
       )
@@ -95,7 +95,7 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       QState.fromQubits(Qubit.zero)
-        .getThrough(Q1Gate.rotY(Math.PI / 4), 0)
+        .getThrough(QGate.rotY(Math.PI / 4), List(0))
         almostEqual QState(
         Vec(0.9239.toComplex, 0.3827.toComplex)
       )
@@ -103,7 +103,7 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       QState.fromQubits(Qubit.one)
-        .getThrough(Q1Gate.rotY(Math.PI / 4), 0)
+        .getThrough(QGate.rotY(Math.PI / 4), List(0))
         almostEqual QState(
         Vec(Complex(-0.3827, 0), 0.9239.toComplex)
       )
@@ -117,11 +117,11 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.had, k)
-        .getThrough(Q1Gate.phase(180), k)
-        .getThrough(Q1Gate.had, k)
+        .getThrough(QGate.had, List(k))
+        .getThrough(QGate.phase(180), List(k))
+        .getThrough(QGate.had, List(k))
         almostEqual qState
-        .getThrough(Q1Gate.not, k)
+        .getThrough(QGate.not, List(k))
     )
   }
 
@@ -132,25 +132,11 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.had, k)
-        .getThrough(Q1Gate.not, k)
-        .getThrough(Q1Gate.had, k)
+        .getThrough(QGate.had, List(k))
+        .getThrough(QGate.not, List(k))
+        .getThrough(QGate.had, List(k))
         almostEqual qState
-        .getThrough(Q1Gate.phase(180), k)
-    )
-  }
-
-  test("ROOT-of-NOT property") {
-    val size = random.nextInt(3) + 1
-    val k = random.nextInt(size)
-    val qState = random.nextQState(size)
-
-    assert(
-      qState
-        .getThrough(Q1Gate.rootOfNot, k)
-        .getThrough(Q1Gate.rootOfNot, k)
-        almostEqual qState
-        .getThrough(Q1Gate.not, k)
+        .getThrough(QGate.phase(180), List(k))
     )
   }
 
@@ -178,9 +164,9 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.had, 1)
+        .getThrough(QGate.had, List(1))
         .getThrough(Q2Gate.cNot, (0, 1))
-        .getThrough(Q1Gate.had, 1)
+        .getThrough(QGate.had, List(1))
         almostEqual qState
         .getThrough(Q2Gate.cPhase(180), (0, 1))
     )
@@ -194,9 +180,9 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.had, j)
+        .getThrough(QGate.had, List(j))
         .getThrough(Q2Gate.cNot, (i, j))
-        .getThrough(Q1Gate.had, j)
+        .getThrough(QGate.had, List(j))
         almostEqual qState
         .getThrough(Q2Gate.cPhase(180), (i, j))
     )
@@ -240,11 +226,11 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.phase(45), 1)
+        .getThrough(QGate.phase(45), List(1))
         .getThrough(Q2Gate.cNot, (0, 1))
-        .getThrough(Q1Gate.phase(-45), 1)
+        .getThrough(QGate.phase(-45), List(1))
         .getThrough(Q2Gate.cNot, (0, 1))
-        .getThrough(Q1Gate.phase(45), 0)
+        .getThrough(QGate.phase(45), List(0))
         almostEqual qState
         .getThrough(Q2Gate.cPhase(90), (0, 1))
     )
