@@ -3,7 +3,23 @@ package mrdimosthenis.feyn.quantum.gates
 import mrdimosthenis.feyn.math._
 import mrdimosthenis.feyn.math.extensions._
 
-case class Q1Gate(matrix: Matrix, txt: String)
+case class Q1Gate(matrix: Matrix, txt: String) {
+
+  def text(k: Int, n: Int): String =
+    LazyList
+      .from(0)
+      .take(n)
+      .map { i =>
+        if (i == k)
+          txt
+        else
+          s"""
+             |─────
+             |     """
+            .stripMargin
+      }.mkString("\n")
+
+}
 
 object Q1Gate {
 
@@ -14,9 +30,9 @@ object Q1Gate {
         Vec(1.toComplex, Complex.zero)
       )
     val txt =
-      s""" ┌───┐
-         | ┤ X ├
-         | └───┘"""
+      s"""┌───┐
+         |┤ X ├
+         |└───┘"""
         .stripMargin
     Q1Gate(matrix, txt)
   }
@@ -28,9 +44,9 @@ object Q1Gate {
         Vec(Complex(0, 1), Complex.zero)
       )
     val txt =
-      s""" ┌───┐
-         | ┤ Y ├
-         | └───┘"""
+      s"""┌───┐
+         |┤ Y ├
+         |└───┘"""
         .stripMargin
     Q1Gate(matrix, txt)
   }
@@ -42,9 +58,9 @@ object Q1Gate {
         Vec(Complex.zero, Complex(-1, 0))
       )
     val txt =
-      s""" ┌───┐
-         | ┤ Z ├
-         | └───┘"""
+      s"""┌───┐
+         |┤ Z ├
+         |└───┘"""
         .stripMargin
     Q1Gate(matrix, txt)
   }
@@ -57,9 +73,9 @@ object Q1Gate {
       )
     val coefficient = 1.0 / Math.sqrt(2)
     val txt =
-      s""" ┌───┐
-         | ┤ H ├
-         | └───┘"""
+      s"""┌───┐
+         |┤ H ├
+         |└───┘"""
         .stripMargin
     Q1Gate(matrix, txt)
     Q1Gate(coefficient * matrix, txt)
@@ -72,9 +88,9 @@ object Q1Gate {
         Vec(Complex.zero, Complex(0, 1))
       )
     val txt =
-      s""" ┌───┐
-         | ┤ S ├
-         | └───┘"""
+      s"""┌───┐
+         |┤ S ├
+         |└───┘"""
         .stripMargin
     Q1Gate(matrix, txt)
   }
@@ -90,9 +106,9 @@ object Q1Gate {
         Vec(Complex.zero, z)
       )
     val txt =
-      s""" ┌───┐
-         | ┤ T ├
-         | └───┘"""
+      s"""┌───┐
+         |┤ T ├
+         |└───┘"""
         .stripMargin
     Q1Gate(matrix, txt)
   }

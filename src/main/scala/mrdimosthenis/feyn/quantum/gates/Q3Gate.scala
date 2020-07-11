@@ -4,7 +4,33 @@ import mrdimosthenis.feyn.math._
 
 import scala.util.chaining._
 
-case class Q3Gate(matrix: Matrix, txt: (String, String, String))
+case class Q3Gate(matrix: Matrix, txt: (String, String, String)) {
+
+  def text(ks: (Int, Int, Int), n: Int): String = {
+    LazyList
+      .from(0)
+      .take(n)
+      .map { i =>
+        if (i == ks._1)
+          txt._1
+        else if (i == ks._2)
+          txt._2
+        else if (i == ks._3)
+          txt._3
+        else if (i > ks._1 && i < ks._3)
+          s"""  │
+             |──■──
+             |  │  """
+            .stripMargin
+        else
+          s"""
+             |─────
+             |     """
+            .stripMargin
+      }.mkString("\n")
+  }
+
+}
 
 object Q3Gate {
 
