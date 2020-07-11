@@ -57,24 +57,6 @@ case class QState(vec: Vec) {
     .pipe(_ * vec.toVerticalMatrix)
     .pipe { a => QState(a.vecExpansion) }
 
-  private def applyBaseQGate(baseIndex: Int, qGate: QGate): QState = {
-    val initAcc =
-      LazyList
-        .fill(size)(Matrix.id(2))
-        .updated(baseIndex, qGate.matrix)
-    LazyList
-      .from(1)
-      .take(qGate.size - 1)
-      .foldLeft(initAcc) { (acc, i) =>
-        acc.updated(i, Matrix.id(1))
-      }
-      .foldLeft(Matrix.id(1)) { (acc, a) =>
-        acc ** a
-      }
-      .pipe(_ * vec.toVerticalMatrix)
-      .pipe { a => QState(a.vecExpansion) }
-  }
-
   private def swapWithNext(baseIndex: Int): QState =
     applyBaseQ2Gate(baseIndex, Q2Gate.swap)
 
@@ -137,39 +119,6 @@ case class QState(vec: Vec) {
       .applyBaseQ3Gate(ks._1, q3Gate)
       .moveFarApart(ks._1 + 1, distanceB - 1)
       .moveFarApart(ks._1, distanceA)
-  }
-
-  def getThrough(qGate: QGate, ks: List[Int]): QState = {
-    val lazyKs = ks.to(LazyList)
-    if (qGate.size != ks.length)
-      throw new Exception("Num of indices not match gate size")
-    lazyKs.foreach(exceptInvalidIndex)
-    val areKsSorted = LazyList
-      .cons(-1, lazyKs)
-      .zip(lazyKs)
-      .forall { case (kPrev, kNext) =>
-        kPrev < kNext
-      }
-    if (!areKsSorted)
-      throw new Exception("Invalid indices for gate")
-    val firstIndex = lazyKs.head
-    val broughtCloseAndApplied =
-      lazyKs
-        .tail
-        .zipWithIndex
-        .foldLeft(this) { case (acc, (k, i)) =>
-          val distance = k - firstIndex
-          acc.getSideBySide(firstIndex + i, distance)
-        }
-        .applyBaseQGate(firstIndex, qGate)
-    lazyKs
-      .tail
-      .zipWithIndex
-      .reverse
-      .foldLeft(broughtCloseAndApplied) { case (acc, (k, i)) =>
-        val distance = k - firstIndex
-        acc.moveFarApart(firstIndex + i, distance)
-      }
   }
 
   def equal(qState: QState): Boolean =
