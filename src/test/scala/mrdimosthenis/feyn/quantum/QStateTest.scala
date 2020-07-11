@@ -6,7 +6,6 @@ import mrdimosthenis.feyn.math.extensions._
 import mrdimosthenis.feyn.quantum.gates._
 import mrdimosthenis.feyn.quantum.extensions._
 
-import scala.util.chaining._
 import scala.util.Random
 
 object QStateTest extends SimpleTestSuite {
