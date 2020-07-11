@@ -58,7 +58,7 @@ case class QState(vec: Vec) {
     .pipe { a => QState(a.vecExpansion) }
 
   private def swapWithNext(baseIndex: Int): QState =
-    applyBaseQ2Gate(baseIndex, Q2Gate.swap)
+    applyBaseQ2Gate(baseIndex, Q2Gate.SWAP)
 
   private def getSideBySide(baseIndex: Int, distance: Int): QState = {
     if (distance == 1) this
