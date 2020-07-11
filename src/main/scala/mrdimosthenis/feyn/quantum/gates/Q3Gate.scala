@@ -4,9 +4,15 @@ import mrdimosthenis.feyn.math._
 
 import scala.util.chaining._
 
-case class Q3Gate(matrix: Matrix) extends Gate
+case class Q3Gate(matrix: Matrix, txt: (String, String, String))
 
 object Q3Gate {
+
+  private val controlTxt =
+    s"""
+       |──■──
+       |  │  """
+      .stripMargin
 
   val CCX: Q3Gate = {
     val (first6Rows, last2Rows) =
@@ -14,10 +20,21 @@ object Q3Gate {
         .id(8)
         .lazyRows
         .splitAt(6)
-    LazyList
-      .concat(first6Rows, last2Rows.reverse)
-      .pipe(Matrix.apply)
-      .pipe(Q3Gate.apply)
+    val matrix =
+      LazyList
+        .concat(first6Rows, last2Rows.reverse)
+        .pipe(Matrix.apply)
+    val txt2 =
+      s"""  │
+         |──■──
+         |  │  """
+        .stripMargin
+    val txt3 =
+      s"""┌─┴─┐
+         |┤ X ├
+         |└───┘"""
+        .stripMargin
+    Q3Gate(matrix, (controlTxt, txt2, txt3))
   }
 
   val CSWAP: Q3Gate = {
@@ -28,10 +45,21 @@ object Q3Gate {
         .splitAt(5)
     val (lastRow, reversedButLastRows) =
       last3Rows.reverse.splitAt(1)
-    LazyList
-      .concat(first5Rows, reversedButLastRows, lastRow)
-      .pipe(Matrix.apply)
-      .pipe(Q3Gate.apply)
+    val matrix =
+      LazyList
+        .concat(first5Rows, reversedButLastRows, lastRow)
+        .pipe(Matrix.apply)
+    val txt2 =
+      s"""  │
+         |──X──
+         |  │  """
+        .stripMargin
+    val txt3 =
+      s"""  │
+         |──X──
+         |     """
+        .stripMargin
+    Q3Gate(matrix, (controlTxt, txt2, txt3))
   }
 
 }

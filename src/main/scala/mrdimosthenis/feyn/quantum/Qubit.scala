@@ -3,18 +3,31 @@ package mrdimosthenis.feyn.quantum
 import mrdimosthenis.feyn.math._
 import mrdimosthenis.feyn.math.extensions._
 
-case class Qubit(u0: Complex, u1: Complex) {
+case class Qubit(vec: Vec, txt: String) {
 
-  def toVec: Vec = Vec(u0, u1)
 
 }
 
 object Qubit {
 
-  def zero: Qubit =
-    Qubit(1.toComplex, Complex.zero)
+  def zero: Qubit = {
+    val vec = Vec(1.toComplex, Complex.zero)
+    val txt =
+      s"""
+         | 0>──
+         |     """
+        .stripMargin
+    Qubit(vec, txt)
+  }
 
-  def one: Qubit =
-    Qubit(Complex.zero, 1.toComplex)
+  def one: Qubit = {
+    val vec = Vec(Complex.zero, 1.toComplex)
+    val txt =
+      s"""
+         | 1>──
+         |     """
+        .stripMargin
+    Qubit(vec, txt)
+  }
 
 }

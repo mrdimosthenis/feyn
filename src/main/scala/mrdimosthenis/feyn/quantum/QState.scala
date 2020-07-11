@@ -134,7 +134,7 @@ object QState {
   def fromQubits(qubits: Qubit*): QState =
     qubits
       .foldLeft(Matrix.id(1)) { (acc, qubit) =>
-        acc ** Matrix(qubit.toVec)
+        acc ** Matrix(qubit.vec)
       }
       .pipe { a => QState(a.vecExpansion) }
 
