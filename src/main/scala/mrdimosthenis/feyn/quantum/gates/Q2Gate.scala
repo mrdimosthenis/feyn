@@ -9,7 +9,7 @@ case class Q2Gate(matrix: Matrix) extends Gate
 
 object Q2Gate {
 
-  val CX: Q2Gate =
+  def cNot: Q2Gate =
     Matrix(
       Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
       Vec(Complex.zero, 1.toComplex, Complex.zero, Complex.zero),
@@ -17,23 +17,20 @@ object Q2Gate {
       Vec(Complex.zero, Complex.zero, 1.toComplex, Complex.zero)
     ).pipe(Q2Gate.apply)
 
-  val CY: Q2Gate =
-    Matrix(
-      Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
-      Vec(Complex.zero, 1.toComplex, Complex.zero, Complex.zero),
-      Vec(Complex.zero, Complex.zero, Complex.zero, Complex(0, -1)),
-      Vec(Complex.zero, Complex.zero, Complex(0, 1), Complex.zero)
-    ).pipe(Q2Gate.apply)
-
-  val CZ: Q2Gate =
+  def cPhase(degrees: Double): Q2Gate = {
+    val z = Complex(
+      Math.cos(degrees.toRadians),
+      Math.sin(degrees.toRadians)
+    )
     Matrix(
       Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
       Vec(Complex.zero, 1.toComplex, Complex.zero, Complex.zero),
       Vec(Complex.zero, Complex.zero, 1.toComplex, Complex.zero),
-      Vec(Complex.zero, Complex.zero, Complex.zero, Complex(-1, 0))
+      Vec(Complex.zero, Complex.zero, Complex.zero, z)
     ).pipe(Q2Gate.apply)
+  }
 
-  val SWAP: Q2Gate =
+  def swap: Q2Gate =
     Matrix(
       Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
       Vec(Complex.zero, Complex.zero, 1.toComplex, Complex.zero),

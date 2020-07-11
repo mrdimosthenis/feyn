@@ -20,7 +20,7 @@ object QStateTest extends SimpleTestSuite {
     assert(
       QState
         .init(1)
-        .getThrough(Q1Gate.X, 0)
+        .getThrough(Q1Gate.not, 0)
         equal QState
         .fromQubits(Qubit.one)
     )
@@ -33,8 +33,8 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.X, k)
-        .getThrough(Q1Gate.X, k)
+        .getThrough(Q1Gate.not, k)
+        .getThrough(Q1Gate.not, k)
         almostEqual qState
     )
   }
@@ -43,7 +43,7 @@ object QStateTest extends SimpleTestSuite {
     assert(
       QState
         .init(1)
-        .getThrough(Q1Gate.H, 0)
+        .getThrough(Q1Gate.had, 0)
         almostEqual QState(
         Vec(0.7071.toComplex, 0.7071.toComplex)
       )
@@ -57,9 +57,99 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q1Gate.H, k)
-        .getThrough(Q1Gate.H, k)
+        .getThrough(Q1Gate.had, k)
+        .getThrough(Q1Gate.had, k)
         almostEqual qState
+    )
+  }
+
+  test("PHASE gate on single qubit state") {
+    assert(
+      QState
+        .init(1)
+        .getThrough(Q1Gate.had, 0)
+        .getThrough(Q1Gate.phase(45), 0)
+        almostEqual QState(
+        Vec(0.7071.toComplex, Complex(0.5, 0.5))
+      )
+    )
+  }
+
+  test("ROTX and ROTY gates on single qubit states") {
+    assert(
+      QState.fromQubits(Qubit.zero)
+        .getThrough(Q1Gate.rotX(Math.PI / 4), 0)
+        almostEqual QState(
+        Vec(0.9239.toComplex, Complex(0, -0.3827))
+      )
+    )
+
+    assert(
+      QState.fromQubits(Qubit.one)
+        .getThrough(Q1Gate.rotX(Math.PI / 4), 0)
+        almostEqual QState(
+        Vec(Complex(0, -0.3827), 0.9239.toComplex)
+      )
+    )
+
+    assert(
+      QState.fromQubits(Qubit.zero)
+        .getThrough(Q1Gate.rotY(Math.PI / 4), 0)
+        almostEqual QState(
+        Vec(0.9239.toComplex, 0.3827.toComplex)
+      )
+    )
+
+    assert(
+      QState.fromQubits(Qubit.one)
+        .getThrough(Q1Gate.rotY(Math.PI / 4), 0)
+        almostEqual QState(
+        Vec(Complex(-0.3827, 0), 0.9239.toComplex)
+      )
+    )
+  }
+
+  test("HAD-PHASE(180)-HAD equals NOT property") {
+    val size = random.nextInt(3) + 1
+    val k = random.nextInt(size)
+    val qState = random.nextQState(size)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.had, k)
+        .getThrough(Q1Gate.phase(180), k)
+        .getThrough(Q1Gate.had, k)
+        almostEqual qState
+        .getThrough(Q1Gate.not, k)
+    )
+  }
+
+  test("HAD-NOT-HAD equals PHASE(180) property") {
+    val size = random.nextInt(3) + 1
+    val k = random.nextInt(size)
+    val qState = random.nextQState(size)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.had, k)
+        .getThrough(Q1Gate.not, k)
+        .getThrough(Q1Gate.had, k)
+        almostEqual qState
+        .getThrough(Q1Gate.phase(180), k)
+    )
+  }
+
+  test("ROOT-of-NOT property") {
+    val size = random.nextInt(3) + 1
+    val k = random.nextInt(size)
+    val qState = random.nextQState(size)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.rootOfNot, k)
+        .getThrough(Q1Gate.rootOfNot, k)
+        almostEqual qState
+        .getThrough(Q1Gate.not, k)
     )
   }
 
@@ -69,8 +159,8 @@ object QStateTest extends SimpleTestSuite {
     assert(
       QState
         .init(2)
-        .getThrough(Q1Gate.H, 0)
-        .getThrough(Q2Gate.CX, (0, 1))
+        .getThrough(Q1Gate.had, 0)
+        .getThrough(Q2Gate.cNot, (0, 1))
         almostEqual QState(
         Vec(
           0.7071.toComplex,
@@ -82,18 +172,47 @@ object QStateTest extends SimpleTestSuite {
     )
   }
 
+  test("HAD-CNOT-HAD equals CPHASE(180) property on two qubits") {
+    val qState = random.nextQState(2)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.had, 1)
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q1Gate.had, 1)
+        almostEqual qState
+        .getThrough(Q2Gate.cPhase(180), (0, 1))
+    )
+  }
+
+  test("HAD-CNOT-HAD equals CPHASE(180) property on multiple qubits") {
+    val size = random.nextInt(3) + 3
+    val i = random.nextInt(size - 1)
+    val j = random.nextInt(size - i - 1) + i + 1
+    val qState = random.nextQState(size)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.had, j)
+        .getThrough(Q2Gate.cNot, (i, j))
+        .getThrough(Q1Gate.had, j)
+        almostEqual qState
+        .getThrough(Q2Gate.cPhase(180), (i, j))
+    )
+  }
+
   test("3xCNOT equals SWAP property on two qubits") {
     val qState = random.nextQState(2)
 
     assert(
       qState
-        .getThrough(Q2Gate.CX, (0, 1))
-        .getThrough(Q2Gate.SWAP, (0, 1))
-        .getThrough(Q2Gate.CX, (0, 1))
-        .getThrough(Q2Gate.SWAP, (0, 1))
-        .getThrough(Q2Gate.CX, (0, 1))
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q2Gate.swap, (0, 1))
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q2Gate.swap, (0, 1))
+        .getThrough(Q2Gate.cNot, (0, 1))
         almostEqual qState
-        .getThrough(Q2Gate.SWAP, (0, 1))
+        .getThrough(Q2Gate.swap, (0, 1))
     )
   }
 
@@ -105,13 +224,28 @@ object QStateTest extends SimpleTestSuite {
 
     assert(
       qState
-        .getThrough(Q2Gate.CX, (i, j))
-        .getThrough(Q2Gate.SWAP, (i, j))
-        .getThrough(Q2Gate.CX, (i, j))
-        .getThrough(Q2Gate.SWAP, (i, j))
-        .getThrough(Q2Gate.CX, (i, j))
+        .getThrough(Q2Gate.cNot, (i, j))
+        .getThrough(Q2Gate.swap, (i, j))
+        .getThrough(Q2Gate.cNot, (i, j))
+        .getThrough(Q2Gate.swap, (i, j))
+        .getThrough(Q2Gate.cNot, (i, j))
         almostEqual qState
-        .getThrough(Q2Gate.SWAP, (i, j))
+        .getThrough(Q2Gate.swap, (i, j))
+    )
+  }
+
+  test("Constructed CPHASE property on two qubits") {
+    val qState = random.nextQState(2)
+
+    assert(
+      qState
+        .getThrough(Q1Gate.phase(45), 1)
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q1Gate.phase(-45), 1)
+        .getThrough(Q2Gate.cNot, (0, 1))
+        .getThrough(Q1Gate.phase(45), 0)
+        almostEqual qState
+        .getThrough(Q2Gate.cPhase(90), (0, 1))
     )
   }
 
@@ -123,23 +257,23 @@ object QStateTest extends SimpleTestSuite {
     assert(
       qState
 
-        .getThrough(Q2Gate.SWAP, (1, 2))
-        .getThrough(Q3Gate.CCX, (0, 1, 2))
-        .getThrough(Q2Gate.SWAP, (1, 2))
+        .getThrough(Q2Gate.swap, (1, 2))
+        .getThrough(Q3Gate.ccNot, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (1, 2))
 
-        .getThrough(Q2Gate.SWAP, (0, 2))
-        .getThrough(Q3Gate.CCX, (0, 1, 2))
-        .getThrough(Q2Gate.SWAP, (0, 2))
+        .getThrough(Q2Gate.swap, (0, 2))
+        .getThrough(Q3Gate.ccNot, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (0, 2))
 
-        .getThrough(Q2Gate.SWAP, (1, 2))
-        .getThrough(Q3Gate.CCX, (0, 1, 2))
-        .getThrough(Q2Gate.SWAP, (1, 2))
+        .getThrough(Q2Gate.swap, (1, 2))
+        .getThrough(Q3Gate.ccNot, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (1, 2))
 
         almostEqual qState
 
-        .getThrough(Q2Gate.SWAP, (0, 2))
-        .getThrough(Q3Gate.CSWAP, (0, 1, 2))
-        .getThrough(Q2Gate.SWAP, (0, 2))
+        .getThrough(Q2Gate.swap, (0, 2))
+        .getThrough(Q3Gate.cSwap, (0, 1, 2))
+        .getThrough(Q2Gate.swap, (0, 2))
     )
   }
 
@@ -153,23 +287,23 @@ object QStateTest extends SimpleTestSuite {
     assert(
       qState
 
-        .getThrough(Q2Gate.SWAP, (j, k))
-        .getThrough(Q3Gate.CCX, (i, j, k))
-        .getThrough(Q2Gate.SWAP, (j, k))
+        .getThrough(Q2Gate.swap, (j, k))
+        .getThrough(Q3Gate.ccNot, (i, j, k))
+        .getThrough(Q2Gate.swap, (j, k))
 
-        .getThrough(Q2Gate.SWAP, (i, k))
-        .getThrough(Q3Gate.CCX, (i, j, k))
-        .getThrough(Q2Gate.SWAP, (i, k))
+        .getThrough(Q2Gate.swap, (i, k))
+        .getThrough(Q3Gate.ccNot, (i, j, k))
+        .getThrough(Q2Gate.swap, (i, k))
 
-        .getThrough(Q2Gate.SWAP, (j, k))
-        .getThrough(Q3Gate.CCX, (i, j, k))
-        .getThrough(Q2Gate.SWAP, (j, k))
+        .getThrough(Q2Gate.swap, (j, k))
+        .getThrough(Q3Gate.ccNot, (i, j, k))
+        .getThrough(Q2Gate.swap, (j, k))
 
         almostEqual qState
 
-        .getThrough(Q2Gate.SWAP, (i, k))
-        .getThrough(Q3Gate.CSWAP, (i, j, k))
-        .getThrough(Q2Gate.SWAP, (i, k))
+        .getThrough(Q2Gate.swap, (i, k))
+        .getThrough(Q3Gate.cSwap, (i, j, k))
+        .getThrough(Q2Gate.swap, (i, k))
     )
   }
 
