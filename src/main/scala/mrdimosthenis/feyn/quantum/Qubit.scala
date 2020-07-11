@@ -3,10 +3,7 @@ package mrdimosthenis.feyn.quantum
 import mrdimosthenis.feyn.math._
 import mrdimosthenis.feyn.math.extensions._
 
-case class Qubit(vec: Vec, txt: String) {
-
-
-}
+case class Qubit(vec: Vec, txt: String)
 
 object Qubit {
 

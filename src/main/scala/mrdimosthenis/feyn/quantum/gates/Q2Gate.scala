@@ -3,30 +3,7 @@ package mrdimosthenis.feyn.quantum.gates
 import mrdimosthenis.feyn.math._
 import mrdimosthenis.feyn.math.extensions._
 
-case class Q2Gate(matrix: Matrix, txt: (String, String)) {
-
-  def text(ks: (Int, Int), n: Int): String =
-    LazyList
-      .from(0)
-      .take(n)
-      .map { i =>
-        if (i == ks._1)
-          txt._1
-        else if (i == ks._2)
-          txt._2
-        else if (i > ks._1 && i < ks._2)
-          s"""  │
-             |──■──
-             |  │  """
-            .stripMargin
-        else
-          s"""
-             |─────
-             |     """
-            .stripMargin
-      }.mkString("\n")
-
-}
+case class Q2Gate(matrix: Matrix, txt: (String, String))
 
 object Q2Gate {
 
