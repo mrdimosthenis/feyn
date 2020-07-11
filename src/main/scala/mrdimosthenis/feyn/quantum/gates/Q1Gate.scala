@@ -5,19 +5,9 @@ import mrdimosthenis.feyn.math.extensions._
 
 import scala.util.chaining._
 
-case class Q1Gate(matrix: Matrix) extends Gate {
-
-  def followedBy(q1Gate: Q1Gate): Q1Gate =
-    Q1Gate(q1Gate.matrix * matrix)
-
-}
+case class Q1Gate(matrix: Matrix) extends Gate
 
 object Q1Gate {
-
-  def id: Q1Gate =
-    Matrix
-      .id(2)
-      .pipe(Q1Gate.apply)
 
   def not: Q1Gate =
     Matrix(
@@ -25,10 +15,14 @@ object Q1Gate {
       Vec(1.toComplex, Complex.zero)
     ).pipe(Q1Gate.apply)
 
-  def rootOfNot: Q1Gate =
-    had
-      .followedBy(phase(90))
-      .followedBy(had)
+  def had: Q1Gate = {
+    val matrix = Matrix(
+      Vec(1.toComplex, 1.toComplex),
+      Vec(1.toComplex, Complex(-1, 0))
+    )
+    val coefficient = 1.0 / Math.sqrt(2)
+    Q1Gate(coefficient * matrix)
+  }
 
   def phase(degrees: Double): Q1Gate = {
     val z = Complex(
@@ -57,15 +51,6 @@ object Q1Gate {
       Vec(cosZ, Complex.zero - sinZ),
       Vec(sinZ, cosZ)
     ).pipe(Q1Gate.apply)
-  }
-
-  def had: Q1Gate = {
-    val matrix = Matrix(
-      Vec(1.toComplex, 1.toComplex),
-      Vec(1.toComplex, Complex(-1, 0))
-    )
-    val coefficient = 1.0 / Math.sqrt(2)
-    Q1Gate(coefficient * matrix)
   }
 
 }

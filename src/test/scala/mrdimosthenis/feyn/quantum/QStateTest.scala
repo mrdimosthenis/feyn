@@ -139,20 +139,6 @@ object QStateTest extends SimpleTestSuite {
     )
   }
 
-  test("ROOT-of-NOT property") {
-    val size = random.nextInt(3) + 1
-    val k = random.nextInt(size)
-    val qState = random.nextQState(size)
-
-    assert(
-      qState
-        .getThrough(Q1Gate.rootOfNot, k)
-        .getThrough(Q1Gate.rootOfNot, k)
-        almostEqual qState
-        .getThrough(Q1Gate.not, k)
-    )
-  }
-
   // Get through q2Gates
 
   test("HAD and CNOT gates on two qubits") {
