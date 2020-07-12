@@ -13,21 +13,21 @@ case class Matrix(rows: Vec*) {
   val lazyRows: LazyList[Vec] =
     rows.to(LazyList)
 
-  override def toString: String = {
-    val maxCompLength = lazyRows
-      .flatMap(_.lazyComponents)
-      .map(_.toString.length)
-      .max
-    lazyRows.map { v =>
-      v.lazyComponents
-        .map { z =>
-          (maxCompLength - z.toString.length)
-            .pipe(" ".repeat)
-            .pipe(_ + z)
-        }
-        .mkString("\t")
-    }.mkString("|", "|\n|", "|")
-  }
+//  override def toString: String = {
+//    val maxCompLength = lazyRows
+//      .flatMap(_.lazyComponents)
+//      .map(_.toString.length)
+//      .max
+//    lazyRows.map { v =>
+//      v.lazyComponents
+//        .map { z =>
+//          (maxCompLength - z.toString.length)
+//            .pipe(" ".repeat)
+//            .pipe(_ + z)
+//        }
+//        .mkString("\t")
+//    }.mkString("|", "|\n|", "|")
+//  }
 
   def dims: (Int, Int) = {
     val m = lazyRows.head.dim

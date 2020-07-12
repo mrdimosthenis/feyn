@@ -12,19 +12,19 @@ case class QState(vec: Vec) {
     if (k < 0 || k >= size)
       throw new Exception("Invalid state index")
 
-  override def toString: String = {
-    val maxCompLength = vec
-      .lazyComponents
-      .map(_.toString.length)
-      .max
-    vec
-      .lazyComponents
-      .map { z =>
-        (maxCompLength - z.toString.length)
-          .pipe(" ".repeat)
-          .pipe(_ + z)
-      }.mkString("||", "||\n||", "||")
-  }
+//  override def toString: String = {
+//    val maxCompLength = vec
+//      .lazyComponents
+//      .map(_.toString.length)
+//      .max
+//    vec
+//      .lazyComponents
+//      .map { z =>
+//        (maxCompLength - z.toString.length)
+//          .pipe(" ".repeat)
+//          .pipe(_ + z)
+//      }.mkString("||", "||\n||", "||")
+//  }
 
   val size: Int =
     vec
