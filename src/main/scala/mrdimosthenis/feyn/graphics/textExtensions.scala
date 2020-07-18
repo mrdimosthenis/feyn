@@ -18,7 +18,7 @@ object textExtensions {
          |     """
     }
 
-    def text: String =
+    def text: LazyList[String] =
       qubits
         .map {
           case `zero` => false
@@ -27,7 +27,6 @@ object textExtensions {
         .map { b =>
           qubitTxt(b).stripMargin
         }
-        .mkString("/n")
 
   }
 
@@ -61,7 +60,7 @@ object textExtensions {
 
     import mrdimosthenis.feyn.quantum.gates.Q1Gate._
 
-    def text(k: Int, n: Int): String = {
+    def text(k: Int, n: Int): LazyList[String] = {
       val g = q1Gate match {
         case `X` => "X"
         case `Y` => "Y"
@@ -78,7 +77,6 @@ object textExtensions {
           case _ => emptyTxt
         }
         .map(_.stripMargin)
-        .mkString("/n")
     }
 
   }
@@ -87,7 +85,7 @@ object textExtensions {
 
     import mrdimosthenis.feyn.quantum.gates.Q2Gate._
 
-    def text(ks: (Int, Int), n: Int): String = {
+    def text(ks: (Int, Int), n: Int): LazyList[String] = {
       val txt1 = q2Gate match {
         case `SWAP` =>
           """
@@ -119,7 +117,6 @@ object textExtensions {
           else emptyTxt
         }
         .map(_.stripMargin)
-        .mkString("/n")
     }
 
   }
@@ -128,7 +125,7 @@ object textExtensions {
 
     import mrdimosthenis.feyn.quantum.gates.Q3Gate._
 
-    def text(ks: (Int, Int, Int), n: Int): String = {
+    def text(ks: (Int, Int, Int), n: Int): LazyList[String] = {
       val (txt1, txt2, txt3) = q3Gate match {
         case `CSWAP` =>
           (
@@ -160,7 +157,6 @@ object textExtensions {
           else emptyTxt
         }
         .map(_.stripMargin)
-        .mkString("/n")
     }
 
   }
