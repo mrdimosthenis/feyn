@@ -4,7 +4,7 @@ import mrdimosthenis.feyn.math._
 
 import scala.util.chaining._
 
-case class Q3Gate(matrix: Matrix)
+case class Q3Gate(matrix: Matrix) extends Gate
 
 object Q3Gate {
 

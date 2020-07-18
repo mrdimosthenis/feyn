@@ -5,7 +5,7 @@ import mrdimosthenis.feyn.math.extensions._
 
 import scala.util.chaining._
 
-case class Q1Gate(matrix: Matrix)
+case class Q1Gate(matrix: Matrix) extends Gate
 
 object Q1Gate {
 
