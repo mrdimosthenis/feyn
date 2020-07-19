@@ -77,7 +77,6 @@ object ComplexTest extends SimpleTestSuite {
   }
 
   test("SVG representation") {
-
     assert(
       Complex(0.2, -0.6).svg(60, "red").outerHTML ==
         "<svg height=\"60\" width=\"60\"><circle cx=\"30\" cy=\"30\" r=\"30\" fill-opacity=\"0\" stroke=\"red\"></circle><circle cx=\"30\" cy=\"30\" r=\"1\" fill-opacity=\"0.25\" stroke=\"red\"></circle><circle cx=\"36\" cy=\"48\" r=\"5\" fill-opacity=\"0.75\" fill=\"red\"></circle></svg>"
