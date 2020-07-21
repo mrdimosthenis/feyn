@@ -6,7 +6,7 @@ version := "0.1"
 
 scalaVersion := "2.13.2"
 
-scalaJSUseMainModuleInitializer := false
+scalaJSUseMainModuleInitializer := true
 
 libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "1.0.0",
