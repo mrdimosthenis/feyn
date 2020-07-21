@@ -10,6 +10,7 @@ scalaJSUseMainModuleInitializer := true
 
 libraryDependencies ++= Seq(
   "org.scala-js" %%% "scalajs-dom" % "1.0.0",
+  "org.akka-js" %%% "akkajsactor" % "2.2.6.5",
   "io.monix" %%% "minitest" % "2.8.2" % Test
 )
 
