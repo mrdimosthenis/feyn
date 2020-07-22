@@ -13,9 +13,7 @@ object textExtensions {
 
     private def qubitTxt(isOne: Boolean): String = {
       val q = if (isOne) "1" else "0"
-      s"""
-         | $q>──
-         |     """
+      s"<br>&ensp;$q>──<br>&ensp;&ensp;&ensp;&ensp;&ensp;"
     }
 
     def text: LazyList[String] =
@@ -24,36 +22,26 @@ object textExtensions {
           case `zero` => false
           case `one` => true
         }
-        .map { b =>
-          qubitTxt(b).stripMargin
-        }
+        .map(qubitTxt)
 
   }
 
   // gates
 
-  private val emptyTxt: String =
-    """
-      |─────
-      |     """
+  private val emptyTxt =
+    "<br>─────<br>     "
 
-  private val crossTxt: String =
-    """  │
-      |──│──
-      |  │  """
+  private val crossTxt =
+    "&ensp;&ensp;│<br>──│──<br>&ensp;&ensp;│&ensp;&ensp;"
 
   private def controlTxt(isControlled: Boolean): String = {
     val c = if (isControlled) "│" else "─"
-    s"""  $c
-       |──■──
-       |  │  """
+    s"&ensp;&ensp;$c<br>──■──<br>&ensp;&ensp;│&ensp;&ensp;"
   }
 
   private def gateTxt(g: String, isControlled: Boolean): String = {
     val c = if (isControlled) "┴" else "─"
-    s"""┌─$c─┐
-       |┤ $g ├
-       |└───┘"""
+    s"┌─$c─┐<br>┤&ensp;$g&ensp;├<br>└───┘"
   }
 
   implicit class Q1GateTextExtension(val q1Gate: Q1Gate) {
@@ -76,7 +64,6 @@ object textExtensions {
           case `k` => gateTxt(g, isControlled = false)
           case _ => emptyTxt
         }
-        .map(_.stripMargin)
     }
 
   }
@@ -88,17 +75,13 @@ object textExtensions {
     def text(ks: (Int, Int), n: Int): LazyList[String] = {
       val txt1 = q2Gate match {
         case `SWAP` =>
-          """
-            |──X──
-            |  │  """
+          "<br>──X──<br>&ensp;&ensp;│&ensp;&ensp;"
         case _ =>
           controlTxt(false)
       }
       val txt2 = q2Gate match {
         case `SWAP` =>
-          """  │
-            |──X──
-            |     """
+          "&ensp;&ensp;│<br>──X──<br>&ensp;&ensp;&ensp;&ensp;&ensp;"
         case cg =>
           val g = cg match {
             case `CX` => "X"
@@ -116,7 +99,6 @@ object textExtensions {
           else if (i > ks._1 && i < ks._2) crossTxt
           else emptyTxt
         }
-        .map(_.stripMargin)
     }
 
   }
@@ -129,15 +111,9 @@ object textExtensions {
       val (txt1, txt2, txt3) = q3Gate match {
         case `CSWAP` =>
           (
-            """
-              |──X──
-              |  │  """,
-            """  │
-              |──X──
-              |  │  """,
-            """  │
-              |──X──
-              |     """
+            "<br>──X──<br>&ensp;&ensp;│&ensp;&ensp;",
+            "<br>──X──<br>&ensp;&ensp;│&ensp;&ensp;",
+            "&ensp;&ensp;│<br>──X──<br>&ensp;&ensp;&ensp;&ensp;&ensp;"
           )
         case `CCX` =>
           (
@@ -156,7 +132,6 @@ object textExtensions {
           else if (i > ks._1 && i < ks._3) crossTxt
           else emptyTxt
         }
-        .map(_.stripMargin)
     }
 
   }
