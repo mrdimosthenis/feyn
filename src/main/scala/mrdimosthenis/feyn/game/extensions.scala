@@ -1,6 +1,7 @@
 package mrdimosthenis.feyn.game
 
 import mrdimosthenis.feyn.game.switches._
+import mrdimosthenis.feyn.quantum.Qubit
 import mrdimosthenis.feyn.quantum.gates._
 import mrdimosthenis.feyn.quantum.extensions._
 
@@ -9,9 +10,9 @@ import scala.util.Random
 
 object extensions {
 
-  implicit class GameRandomExtension(val random: Random) {
+  implicit class SwitchesRandomExtension(val random: Random) {
 
-    def nextPuzzle(numOfCables: Int, numOfSwitches: Int): Puzzle =
+    def nextSwitches(numOfCables: Int, numOfSwitches: Int): LazyList[Switch] =
       random
         .nextGates(numOfSwitches)
         .map { gate =>
@@ -32,9 +33,7 @@ object extensions {
               val ks = (i, j, k)
               Q3Switch(q3Gate, ks, on)
           }
-        }.pipe {
-        Puzzle.apply(numOfCables, _)
-      }
+        }
 
   }
 
