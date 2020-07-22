@@ -78,13 +78,17 @@ object ComplexTest extends SimpleTestSuite {
 
   test("SVG representation") {
     assert(
-      Complex(0.2, -0.6).svg(60, "red").outerHTML ==
-        "<svg height=\"60\" width=\"60\"><circle cx=\"30\" cy=\"30\" r=\"30\" fill-opacity=\"0\" stroke=\"red\"></circle><circle cx=\"30\" cy=\"30\" r=\"1\" fill-opacity=\"0.25\" stroke=\"red\"></circle><circle cx=\"36\" cy=\"48\" r=\"5\" fill-opacity=\"0.75\" fill=\"red\"></circle></svg>"
+      (Complex(0.2, -0.6), Complex(0.6, 0.0))
+        .svg(60, ("red", "blue"))
+        .outerHTML
+        .eq("<svg height=\"60\" width=\"60\"><filter id=\"blurMe\"><feoffset result=\"offOut\" in=\"SourceAlpha\" dx=\"1\" dy=\"1\"></feoffset><fegaussianblur stddeviation=\"1\"></fegaussianblur><feblend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\"></feblend></filter><circle cx=\"30\" cy=\"30\" r=\"30\" fill-opacity=\"0\" stroke=\"red\"></circle><circle cx=\"30\" cy=\"30\" r=\"1\" fill-opacity=\"0.25\" stroke=\"red\"></circle><circle cx=\"36\" cy=\"48\" r=\"5\" fill-opacity=\"0.75\" fill=\"red\" filter=\"url(#blurMe)\"></circle><circle cx=\"48\" cy=\"30\" r=\"5\" fill-opacity=\"0.75\" fill=\"blue\" filter=\"url(#blurMe)\"></circle></svg>")
     )
 
     assert(
-      Complex(-0.2, 0.6).svg(80, "blue").outerHTML ==
-        "<svg height=\"80\" width=\"80\"><circle cx=\"40\" cy=\"40\" r=\"40\" fill-opacity=\"0\" stroke=\"blue\"></circle><circle cx=\"40\" cy=\"40\" r=\"1\" fill-opacity=\"0.25\" stroke=\"blue\"></circle><circle cx=\"32\" cy=\"16\" r=\"5\" fill-opacity=\"0.75\" fill=\"blue\"></circle></svg>"
+      (Complex(-0.2, 0.6), Complex(0.0, 0.2))
+        .svg(80, ("yellow", "green"))
+        .outerHTML
+        .eq("<svg height=\"80\" width=\"80\"><filter id=\"blurMe\"><feoffset result=\"offOut\" in=\"SourceAlpha\" dx=\"1\" dy=\"1\"></feoffset><fegaussianblur stddeviation=\"1\"></fegaussianblur><feblend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\"></feblend></filter><circle cx=\"40\" cy=\"40\" r=\"40\" fill-opacity=\"0\" stroke=\"yellow\"></circle><circle cx=\"40\" cy=\"40\" r=\"1\" fill-opacity=\"0.25\" stroke=\"yellow\"></circle><circle cx=\"32\" cy=\"16\" r=\"5\" fill-opacity=\"0.75\" fill=\"yellow\" filter=\"url(#blurMe)\"></circle><circle cx=\"40\" cy=\"32\" r=\"5\" fill-opacity=\"0.75\" fill=\"green\" filter=\"url(#blurMe)\"></circle></svg>")
     )
   }
 
