@@ -5,8 +5,6 @@ import org.scalajs.dom.document
 
 object App {
 
-  document.onload
-
   def main(args: Array[String]): Unit = {
 
     val goButton = document.getElementById("goButton")
