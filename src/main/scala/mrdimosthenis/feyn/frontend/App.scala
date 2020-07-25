@@ -1,16 +1,63 @@
 package mrdimosthenis.feyn.frontend
 
-import org.scalajs.dom
-import org.scalajs.dom.document
+import mrdimosthenis.feyn.frontend.model.Model
+import mrdimosthenis.feyn.frontend.model.extensions._
+import akka.actor.{ActorSystem, Props}
+import org.scalajs.dom._
+import org.scalajs.dom.raw.HTMLSelectElement
+
+import scala.util.Random
+import scala.util.chaining._
 
 object App {
 
+  val random = new Random()
+
+  private val initModel = Model(
+    random.nextPuzzle(3, 6),
+    None,
+    None,
+    3,
+    6,
+    isSolution = false
+  )
+
+  private lazy val system = ActorSystem("actor-system")
+
+  private val orchestrator = system.actorOf(Props(Orchestrator(initModel)))
+  private val decorator = system.actorOf(Props(Decorator))
+
   def main(args: Array[String]): Unit = {
 
-    val goButton = document.getElementById("goButton")
-    goButton.addEventListener("click", { (e: dom.MouseEvent) =>
-      MyActor.actorRef ! "just clicked"
-    })
+    document
+      .getElementById("goButton")
+      .addEventListener("click", { (e: MouseEvent) =>
+        orchestrator ! ClickGo
+      })
+
+    document
+      .getElementById("qubitsSelectBox")
+      .addEventListener("change", { (e: MouseEvent) =>
+        e.target
+          .asInstanceOf[HTMLSelectElement]
+          .value
+          .toInt
+          .pipe(SelectNumOfQubits)
+          .pipe(orchestrator.!)
+      })
+
+    document
+      .getElementById("gatesSelectBox")
+      .addEventListener("change", { (e: MouseEvent) =>
+        e.target
+          .asInstanceOf[HTMLSelectElement]
+          .value
+          .toInt
+          .pipe(SelectNumOfGates)
+          .pipe(orchestrator.!)
+      })
+
+    orchestrator ! ClickGo
 
   }
 

@@ -1,16 +1,27 @@
 package mrdimosthenis.feyn.frontend
 
-import akka.actor.{Actor, Props}
+import akka.actor.Actor
+import mrdimosthenis.feyn.frontend.model._
 
-object Orchestrator {
+import scala.util.chaining._
 
-  def myActor(): Props = Props(
-    new Actor {
-      def receive: PartialFunction[Any, Unit] = {
-        case message =>
-          println(s"received $message")
-      }
-    }
-  )
+case class Orchestrator(initModel: Model) extends Actor {
+
+  private def updated(currentModel: Model): Receive = {
+    case SelectNumOfQubits(n) =>
+      currentModel
+        .copy(nextPuzzleQubits = n)
+        .pipe(updated)
+        .pipe(context.become)
+    case SelectNumOfGates(n) =>
+      currentModel
+        .copy(nextPuzzleGates = n)
+        .pipe(updated)
+        .pipe(context.become)
+    case ClickGo =>
+      println(currentModel)
+  }
+
+  override def receive: Receive = updated(initModel)
 
 }
