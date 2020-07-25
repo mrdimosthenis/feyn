@@ -4,9 +4,8 @@ package mrdimosthenis.feyn.frontend
 import mrdimosthenis.feyn.frontend.model.Puzzle
 import mrdimosthenis.feyn.graphics.textExtensions._
 import mrdimosthenis.feyn.game.switches._
-
-import akka.actor.Actor
-import org.scalajs.dom.{Element, document}
+import akka.actor.{Actor, ActorRef}
+import org.scalajs.dom.{Element, MouseEvent, document}
 
 object Decorator extends Actor {
 
@@ -21,7 +20,7 @@ object Decorator extends Actor {
     tr
   }
 
-  def tableElems(puzzle: Puzzle, gateSelection: LazyList[Boolean])
+  def tableElems(puzzle: Puzzle, gateSelection: LazyList[Boolean], sender: ActorRef)
   : LazyList[Element] = {
     val qubits = puzzle
       .qubits
@@ -57,7 +56,13 @@ object Decorator extends Actor {
       }
     qubits
       .zip(gates.transpose)
-      .map{ case (th, tds) =>
+      .map { case (th, tds) =>
+        tds.zipWithIndex.foreach { case (td, i) =>
+          if (gateSelection(i)) td.setAttribute("class", "is-info")
+          td.addEventListener("click", { (e: MouseEvent) =>
+            sender ! ClickGate(i)
+          })
+        }
         rowElem(th, tds)
       }
   }
@@ -65,7 +70,7 @@ object Decorator extends Actor {
   override def receive: Receive = {
     case DrawPuzzle(puzzle, gateSelection) =>
       table.innerHTML = ""
-      tableElems(puzzle, gateSelection)
+      tableElems(puzzle, gateSelection, context.sender())
         .foreach(table.appendChild)
   }
 

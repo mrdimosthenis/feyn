@@ -2,7 +2,6 @@ package mrdimosthenis.feyn.frontend
 
 import mrdimosthenis.feyn.frontend.model._
 import mrdimosthenis.feyn.frontend.model.extensions._
-
 import akka.actor.{Actor, Props}
 import scala.util.chaining._
 
@@ -11,6 +10,16 @@ case class Orchestrator(initModel: Model) extends Actor {
   private val decorator = context.system.actorOf(Props(Decorator))
 
   private def updated(currentModel: Model): Receive = {
+    case ClickGate(i) =>
+      val newGateSelection =
+        currentModel
+          .gateSelection
+          .updated(i, !currentModel.gateSelection(i))
+      decorator ! DrawPuzzle(currentModel.puzzle, newGateSelection)
+      currentModel
+        .copy(gateSelection = newGateSelection)
+        .pipe(updated)
+        .pipe(context.become)
     case SelectNumOfQubits(n) =>
       currentModel
         .copy(nextPuzzleQubits = n)
@@ -34,6 +43,7 @@ case class Orchestrator(initModel: Model) extends Actor {
         .copy(puzzle = newPuzzle, gateSelection = newGateSelection)
         .pipe(updated)
         .pipe(context.become)
+    case a => println(a)
   }
 
   override def receive: Receive = updated(initModel)
