@@ -20,7 +20,10 @@ object Decorator extends Actor {
     tr
   }
 
-  def tableElems(puzzle: Puzzle, gateSelection: LazyList[Boolean], sender: ActorRef)
+  def tableElems(puzzle: Puzzle,
+                 gateSelection: LazyList[Boolean],
+                 selectedQubit: Option[Int],
+                 sender: ActorRef)
   : LazyList[Element] = {
     val qubits = puzzle
       .qubits
@@ -54,8 +57,34 @@ object Decorator extends Actor {
           td
         }
       }
+    val transposedGates =
+      gates
+        .transpose
+        .zipWithIndex
+        .map { case (tds, i) =>
+          selectedQubit match {
+            case Some(j) =>
+              if (i == j) tds.foreach(_.setAttribute("class", "is-light"))
+            case None =>
+              ()
+          }
+          tds
+        }
     qubits
-      .zip(gates.transpose)
+      .zipWithIndex
+      .map { case (th, i) =>
+        selectedQubit match {
+          case Some(j) =>
+            if (i == j) th.setAttribute("class", "is-light")
+          case None =>
+            ()
+        }
+        th.addEventListener("click", { (e: MouseEvent) =>
+          sender ! ClickQubit(i)
+        })
+        th
+      }
+      .zip(transposedGates)
       .map { case (th, tds) =>
         tds.zipWithIndex.foreach { case (td, i) =>
           if (gateSelection(i)) td.setAttribute("class", "is-info")
@@ -68,9 +97,9 @@ object Decorator extends Actor {
   }
 
   override def receive: Receive = {
-    case DrawPuzzle(puzzle, gateSelection) =>
+    case DrawPuzzle(puzzle, gateSelection, selectedQubitIndex) =>
       table.innerHTML = ""
-      tableElems(puzzle, gateSelection, context.sender())
+      tableElems(puzzle, gateSelection, selectedQubitIndex, context.sender())
         .foreach(table.appendChild)
   }
 

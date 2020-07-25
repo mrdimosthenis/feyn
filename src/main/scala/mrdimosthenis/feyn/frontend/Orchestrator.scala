@@ -10,12 +10,32 @@ case class Orchestrator(initModel: Model) extends Actor {
   private val decorator = context.system.actorOf(Props(Decorator))
 
   private def updated(currentModel: Model): Receive = {
+    case ClickQubit(i) =>
+      val newSelectedQubitIndex =
+        if (currentModel.selectedQubitIndex.contains(i)) None
+        else Some(i)
+        currentModel
+          .gateSelection
+          .updated(i, !currentModel.gateSelection(i))
+      decorator ! DrawPuzzle(
+        currentModel.puzzle,
+        currentModel.gateSelection,
+        newSelectedQubitIndex
+      )
+      currentModel
+        .copy(selectedQubitIndex = newSelectedQubitIndex)
+        .pipe(updated)
+        .pipe(context.become)
     case ClickGate(i) =>
       val newGateSelection =
         currentModel
           .gateSelection
           .updated(i, !currentModel.gateSelection(i))
-      decorator ! DrawPuzzle(currentModel.puzzle, newGateSelection)
+      decorator ! DrawPuzzle(
+        currentModel.puzzle,
+        newGateSelection,
+        currentModel.selectedQubitIndex
+      )
       currentModel
         .copy(gateSelection = newGateSelection)
         .pipe(updated)
@@ -38,7 +58,7 @@ case class Orchestrator(initModel: Model) extends Actor {
         )
       val newGateSelection =
         LazyList.fill(currentModel.nextPuzzleGates)(false)
-      decorator ! DrawPuzzle(newPuzzle, newGateSelection)
+      decorator ! DrawPuzzle(newPuzzle, newGateSelection, currentModel.selectedQubitIndex)
       currentModel
         .copy(puzzle = newPuzzle, gateSelection = newGateSelection)
         .pipe(updated)

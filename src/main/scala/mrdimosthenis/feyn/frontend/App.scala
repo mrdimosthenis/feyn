@@ -17,7 +17,6 @@ object App {
     random.nextPuzzle(3, 6),
     LazyList.fill(6)(false),
     None,
-    None,
     3,
     6,
     isSolution = false
