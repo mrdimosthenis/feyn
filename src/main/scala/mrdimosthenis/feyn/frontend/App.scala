@@ -15,6 +15,7 @@ object App {
 
   private val initModel = Model(
     random.nextPuzzle(3, 6),
+    LazyList.fill(6)(false),
     None,
     None,
     3,
@@ -25,7 +26,6 @@ object App {
   private lazy val system = ActorSystem("actor-system")
 
   private val orchestrator = system.actorOf(Props(Orchestrator(initModel)))
-  private val decorator = system.actorOf(Props(Decorator))
 
   def main(args: Array[String]): Unit = {
 

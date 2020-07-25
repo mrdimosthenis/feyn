@@ -35,7 +35,7 @@ object textExtensions {
     "&ensp;&ensp;│<br>──│──<br>&ensp;&ensp;│&ensp;&ensp;"
 
   private def controlTxt(isControlled: Boolean): String = {
-    val c = if (isControlled) "│" else "─"
+    val c = if (isControlled) "│" else " "
     s"&ensp;&ensp;$c<br>──■──<br>&ensp;&ensp;│&ensp;&ensp;"
   }
 
@@ -111,8 +111,8 @@ object textExtensions {
       val (txt1, txt2, txt3) = q3Gate match {
         case `CSWAP` =>
           (
-            "<br>──X──<br>&ensp;&ensp;│&ensp;&ensp;",
-            "<br>──X──<br>&ensp;&ensp;│&ensp;&ensp;",
+            "<br>──■──<br>&ensp;&ensp;│&ensp;&ensp;",
+            "&ensp;&ensp;│<br>──X──<br>&ensp;&ensp;│&ensp;&ensp;",
             "&ensp;&ensp;│<br>──X──<br>&ensp;&ensp;&ensp;&ensp;&ensp;"
           )
         case `CCX` =>
