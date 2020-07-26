@@ -19,7 +19,7 @@ object Decorator extends Actor {
     .getElementById("qStateDiv")
 
   private val goButton = document
-  .getElementById("goButton")
+    .getElementById("goButton")
 
   private def rowElem(th: Element, tds: LazyList[Element])
   : Element = {
@@ -118,12 +118,32 @@ object Decorator extends Actor {
         .lazyComponents
     goalStateZs
       .zip(currentStateZs)
-      .map { zTuple =>
+      .zipWithIndex
+      .map { case (zTuple, i) =>
+        val isHighlighted =
+          model.selectedQubitIndex match {
+            case Some(j) =>
+              i.toBinaryString
+                .reverse
+                .toCharArray
+                .to(LazyList)
+                .pipe {
+                  _.appendedAll(LazyList.continually('0'))
+                }
+                .apply(j)
+                .pipe(_ == '1')
+            case None =>
+              false
+          }
         val div = document.createElement("div")
         div.setAttribute("class", "column is-narrow")
         val width = 300.0 / model.puzzle.qubits.length
         zTuple
-          .svg(width, ("green", "blue"))
+          .svg(
+            width,
+            if (isHighlighted) ("lightgreen", "lightblue")
+            else ("darkgreen", "darkblue")
+          )
           .pipe(div.appendChild)
         div
       }
