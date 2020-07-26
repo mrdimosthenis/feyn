@@ -5,9 +5,9 @@ import mrdimosthenis.feyn.frontend.model.Model
 import mrdimosthenis.feyn.graphics.textExtensions._
 import mrdimosthenis.feyn.graphics.svgExtensions._
 import mrdimosthenis.feyn.game.switches._
-
 import akka.actor.{Actor, ActorRef}
-import org.scalajs.dom.{Element, MouseEvent, document}
+import org.scalajs.dom._
+
 import scala.util.chaining._
 
 object Decorator extends Actor {
@@ -17,6 +17,9 @@ object Decorator extends Actor {
 
   private val qStateDiv = document
     .getElementById("qStateDiv")
+
+  private val goButton = document
+  .getElementById("goButton")
 
   private def rowElem(th: Element, tds: LazyList[Element])
   : Element = {
@@ -136,6 +139,11 @@ object Decorator extends Actor {
         .foreach { div =>
           qStateDiv.appendChild(div)
         }
+      goButton.setAttribute(
+        "class",
+        if (model.isSolution) "button  is-success"
+        else "button"
+      )
   }
 
 }
