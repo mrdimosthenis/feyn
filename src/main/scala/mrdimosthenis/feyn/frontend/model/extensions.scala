@@ -1,6 +1,6 @@
 package mrdimosthenis.feyn.frontend.model
 
-import mrdimosthenis.feyn.quantum.Qubit
+import mrdimosthenis.feyn.quantum.{QState, Qubit}
 import mrdimosthenis.feyn.game.extensions._
 
 import scala.util.Random
@@ -36,6 +36,19 @@ object extensions {
         switches.zip(selections)
       Puzzle(qubits, switchesWithSelection)
     }
+
+  }
+
+  implicit class ModelRandomExtension(val random: Random) {
+
+    def nextModel(numOfQubits: Int, numOfSwitches: Int): Model =
+      Model(
+        random.nextPuzzle(numOfQubits, numOfSwitches),
+        LazyList.fill(numOfSwitches)(false),
+        None,
+        numOfQubits,
+        numOfSwitches
+      )
 
   }
 

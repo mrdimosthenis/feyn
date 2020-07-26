@@ -16,7 +16,7 @@ object svgExtensions {
                           fill: Option[String],
                           filter: Option[String])
     : Element = {
-      val circle = document.createElement("circle")
+      val circle = document.createElementNS("http://www.w3.org/2000/svg", "circle")
       circle.setAttribute("cx", cx.toString)
       circle.setAttribute("cy", cy.toString)
       circle.setAttribute("r", r.toString)
@@ -40,21 +40,21 @@ object svgExtensions {
     }
 
     def svg(width: Double, colors: (String, String)): Element = {
-      val feOffset = document.createElement("feOffset")
+      val feOffset = document.createElementNS("http://www.w3.org/2000/svg", "feOffset")
       feOffset.setAttribute("result", "offOut")
       feOffset.setAttribute("in", "SourceAlpha")
       feOffset.setAttribute("dx", "1")
       feOffset.setAttribute("dy", "1")
 
-      val feGaussianBlur = document.createElement("feGaussianBlur")
+      val feGaussianBlur = document.createElementNS("http://www.w3.org/2000/svg", "feGaussianBlur")
       feGaussianBlur.setAttribute("stdDeviation", "1")
 
-      val feBlend = document.createElement("feBlend")
+      val feBlend = document.createElementNS("http://www.w3.org/2000/svg", "feBlend")
       feBlend.setAttribute("in", "SourceGraphic")
       feBlend.setAttribute("in2", "blurOut")
       feBlend.setAttribute("mode", "normal")
 
-      val filter = document.createElement("filter")
+      val filter = document.createElementNS("http://www.w3.org/2000/svg", "filter")
       filter.setAttribute("id", "blurMe")
       filter.appendChild(feOffset)
       filter.appendChild(feGaussianBlur)
@@ -68,10 +68,10 @@ object svgExtensions {
 
       val circle1 = svgCircle(r, r, r, 0.0, Some(colors._1), None, None)
       val circle2 = svgCircle(r, r, 1.0, 0.25, Some(colors._1), None, None)
-      val circle3 = svgCircle(x1, y1, 5.0, 0.75, None, Some(colors._1), Some("url(#blurMe)"))
-      val circle4 = svgCircle(x2, y2, 5.0, 0.75, None, Some(colors._2), Some("url(#blurMe)"))
+      val circle3 = svgCircle(x1, y1, 3.0, 0.75, None, Some(colors._1), Some("url(#blurMe)"))
+      val circle4 = svgCircle(x2, y2, 3.0, 0.75, None, Some(colors._2), Some("url(#blurMe)"))
 
-      val graphic = document.createElement("svg")
+      val graphic = document.createElementNS("http://www.w3.org/2000/svg", "svg")
       graphic.setAttribute("height", width.toString)
       graphic.setAttribute("width", width.toString)
 

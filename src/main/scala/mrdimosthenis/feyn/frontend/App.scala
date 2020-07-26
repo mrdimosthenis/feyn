@@ -3,6 +3,7 @@ package mrdimosthenis.feyn.frontend
 import mrdimosthenis.feyn.frontend.model.Model
 import mrdimosthenis.feyn.frontend.model.extensions._
 import akka.actor.{ActorSystem, Props}
+import mrdimosthenis.feyn.quantum.QState
 import org.scalajs.dom._
 import org.scalajs.dom.raw.HTMLSelectElement
 
@@ -13,18 +14,13 @@ object App {
 
   val random = new Random()
 
-  private val initModel = Model(
-    random.nextPuzzle(3, 6),
-    LazyList.fill(6)(false),
-    None,
-    3,
-    6,
-    isSolution = false
-  )
+  private val initModel =
+    random.nextModel(3, 6)
 
   private lazy val system = ActorSystem("actor-system")
 
-  private val orchestrator = system.actorOf(Props(Orchestrator(initModel)))
+  private val orchestrator =
+    system.actorOf(Props(Orchestrator(initModel)))
 
   def main(args: Array[String]): Unit = {
 
