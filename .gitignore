@@ -5,3 +5,4 @@
 /node_modules/
 /package-lock.json
 /frontend/css/mystyles.css
+/project/build.properties
