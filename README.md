@@ -8,4 +8,4 @@ Find the gate combination from which the qubits need to get through, in order to
 
 ![screenshot](screenshot.png?raw=true)
 
-_The application is writen in Scala._
+_The application is written in Scala._
