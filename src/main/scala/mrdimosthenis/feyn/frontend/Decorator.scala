@@ -120,18 +120,22 @@ object Decorator extends Actor {
       .zip(currentStateZs)
       .zipWithIndex
       .map { case (zTuple, i) =>
+        val binStr =
+          i.toBinaryString
+            .toCharArray
+            .to(LazyList)
+            .pipe { chars =>
+              LazyList
+                .fill(model.currentQState.size - chars.length)('0')
+                .appendedAll(chars)
+            }
+            .mkString
         val isHighlighted =
           model.selectedQubitIndex match {
             case Some(j) =>
-              i.toBinaryString
-                .reverse
-                .toCharArray
-                .to(LazyList)
-                .pipe {
-                  _.appendedAll(LazyList.continually('0'))
-                }
-                .apply(j)
-                .pipe(_ == '1')
+              binStr
+                .charAt(j)
+                .pipe(_ == '0')
             case None =>
               false
           }
@@ -145,6 +149,10 @@ object Decorator extends Actor {
             else ("darkgreen", "darkblue")
           )
           .pipe(div.appendChild)
+        val tag = document.createElement("span")
+        tag.setAttribute("class", "tag")
+        tag.innerText = binStr
+        div.appendChild(tag)
         div
       }
   }
