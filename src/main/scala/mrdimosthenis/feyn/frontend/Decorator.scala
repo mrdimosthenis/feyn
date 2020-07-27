@@ -95,7 +95,7 @@ object Decorator extends Actor {
       .zip(transposedGates)
       .map { case (th, tds) =>
         tds.zipWithIndex.foreach { case (td, i) =>
-          if (model.gateSelection(i)) td.setAttribute("class", "is-info")
+          if (model.gateSelection(i)) td.setAttribute("class", "is-success")
           td.addEventListener("click", { (e: MouseEvent) =>
             sender ! ClickGate(i)
           })
