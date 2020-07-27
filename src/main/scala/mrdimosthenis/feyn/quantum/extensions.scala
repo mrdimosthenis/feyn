@@ -30,8 +30,12 @@ object extensions {
         Q1Gate.Y,
         Q1Gate.Z,
         Q1Gate.H,
+        Q1Gate.H,
+        Q1Gate.H,
+        Q1Gate.H,
         Q1Gate.S,
         Q1Gate.T,
+        Q2Gate.CX,
         Q2Gate.CX,
         Q2Gate.CY,
         Q2Gate.CZ,
@@ -39,14 +43,13 @@ object extensions {
         Q3Gate.CCX,
         Q3Gate.CSWAP,
       ).pipe {
-        LazyList.continually(_)
+        LazyList.fill(10)(_)
       }
         .flatten
-        .take(n)
         .pipe {
           random.shuffle(_)
         }
-
+        .take(n)
   }
 
 }
