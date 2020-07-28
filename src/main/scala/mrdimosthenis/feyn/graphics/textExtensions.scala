@@ -13,7 +13,7 @@ object textExtensions {
 
     private def qubitTxt(isOne: Boolean): String = {
       val q = if (isOne) "1" else "0"
-      s"\n⠀$q>──\n⠀⠀⠀⠀⠀"
+      s"◌◌◌◌◌\n◌$q>──\n◌◌◌◌◌"
     }
 
     def text: LazyList[String] =
@@ -29,19 +29,19 @@ object textExtensions {
   // gates
 
   private val emptyTxt =
-    "\n─────\n     "
+    "◌◌◌◌◌\n─────\n◌◌◌◌◌"
 
   private val crossTxt =
-    "⠀⠀│\n──│──\n⠀⠀│⠀⠀"
+    "◌◌│◌◌\n──│──\n◌◌│◌◌"
 
   private def controlTxt(isControlled: Boolean): String = {
-    val c = if (isControlled) "│" else " "
-    s"⠀⠀$c\n──■──\n⠀⠀│⠀⠀"
+    val c = if (isControlled) "│" else "◌"
+    s"◌◌$c◌◌\n──■──\n◌◌│◌◌"
   }
 
   private def gateTxt(g: String, isControlled: Boolean): String = {
     val c = if (isControlled) "┴" else "─"
-    s"┌─$c─┐\n┤⠀$g⠀├\n└───┘"
+    s"┌─$c─┐\n┤◌$g◌├\n└───┘"
   }
 
   implicit class Q1GateTextExtension(val q1Gate: Q1Gate) {
@@ -75,13 +75,13 @@ object textExtensions {
     def text(ks: (Int, Int), n: Int): LazyList[String] = {
       val txt1 = q2Gate match {
         case `SWAP` =>
-          "\n──X──\n⠀⠀│⠀⠀"
+          "◌◌◌◌◌\n──X──\n◌◌│◌◌"
         case _ =>
           controlTxt(false)
       }
       val txt2 = q2Gate match {
         case `SWAP` =>
-          "⠀⠀│\n──X──\n⠀⠀⠀⠀⠀"
+          "◌◌│◌◌\n──X──\n◌◌◌◌◌"
         case cg =>
           val g = cg match {
             case `CX` => "X"
@@ -111,9 +111,9 @@ object textExtensions {
       val (txt1, txt2, txt3) = q3Gate match {
         case `CSWAP` =>
           (
-            "\n──■──\n⠀⠀│⠀⠀",
-            "⠀⠀│\n──X──\n⠀⠀│⠀⠀",
-            "⠀⠀│\n──X──\n⠀⠀⠀⠀⠀"
+            "◌◌◌◌◌\n──■──\n◌◌│◌◌",
+            "◌◌│◌◌\n──X──\n◌◌│◌◌",
+            "◌◌│◌◌\n──X──\n◌◌◌◌◌"
           )
         case `CCX` =>
           (
