@@ -37,7 +37,7 @@ object Decorator extends Actor {
       .text
       .map { txt =>
         val th = document.createElement("th")
-        th.innerHTML = txt
+        th.innerText = txt
         th
       }
     val gates = model
@@ -61,7 +61,7 @@ object Decorator extends Actor {
       .map { texts =>
         texts.map { txt =>
           val td = document.createElement("td")
-          td.innerHTML = txt
+          td.innerText = txt
           td
         }
       }
@@ -141,7 +141,7 @@ object Decorator extends Actor {
           }
         val div = document.createElement("div")
         div.setAttribute("class", "column is-narrow")
-        val width = 300.0 / model.puzzle.qubits.length
+        val width = 250.0 / model.puzzle.qubits.length
         zTuple
           .svg(
             width,

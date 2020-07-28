@@ -68,8 +68,8 @@ object svgExtensions {
 
       val circle1 = svgCircle(r, r, r, 0.0, Some(colors._1), None, None)
       val circle2 = svgCircle(r, r, 1.0, 0.25, Some(colors._1), None, None)
-      val circle3 = svgCircle(x1, y1, 3.0, 0.75, None, Some(colors._1), Some("url(#blurMe)"))
-      val circle4 = svgCircle(x2, y2, 3.0, 0.75, None, Some(colors._2), Some("url(#blurMe)"))
+      val circle3 = svgCircle(x1, y1, 4.0, 0.75, None, Some(colors._1), Some("url(#blurMe)"))
+      val circle4 = svgCircle(x2, y2, 4.0, 0.75, None, Some(colors._2), Some("url(#blurMe)"))
 
       val graphic = document.createElementNS("http://www.w3.org/2000/svg", "svg")
       graphic.setAttribute("height", width.toString)
