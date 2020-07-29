@@ -146,11 +146,11 @@ object Decorator extends Actor {
           .svg(
             width,
             if (isHighlighted) ("lightgreen", "lightblue")
-            else ("darkgreen", "darkblue")
+            else ("green", "blue")
           )
           .pipe(div.appendChild)
         val tag = document.createElement("span")
-        tag.setAttribute("class", "tag")
+        tag.setAttribute("class", "tag is-unselectable")
         tag.innerText = binStr
         div.appendChild(tag)
         div
