@@ -1,12 +1,8 @@
-# Feyn
-
-A minimalistic quantum puzzle game.
+Feyn is a quantum puzzle game.
 
 https://mrdimosthenis.github.io/feyn
 
-## Goal
-
-Find the gate combination from which the qubits need to get through, in order to achieve the desired quantum state.
+The goal of the game is to find the gate combination from which the qubits need to get through, in order to achieve the desired quantum state.
 
 ![screenshot](screenshot.png?raw=true)
 
