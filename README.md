@@ -1,4 +1,4 @@
-Feyn is a quantum puzzle game.
+**Feyn** is a quantum puzzle game.
 
 https://mrdimosthenis.github.io/feyn
 
