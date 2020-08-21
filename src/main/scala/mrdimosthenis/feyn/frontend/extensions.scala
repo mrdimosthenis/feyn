@@ -92,14 +92,14 @@ object extensions {
   : TypedTag[Line] = line(
     x1 := 0.0,
     y1 := 3.0 * unitLength,
-    x2 := unitLength,
+    x2 := 3.0 * unitLength,
     y2 := 3.0 * unitLength,
     stroke := "black"
   )
 
   private def rightCable(unitLength: Double)
   : TypedTag[Line] = line(
-    x1 := 5.0 * unitLength,
+    x1 := 3.0 * unitLength,
     y1 := 3.0 * unitLength,
     x2 := 6.0 * unitLength,
     y2 := 3.0 * unitLength,
@@ -111,14 +111,14 @@ object extensions {
     x1 := 3.0 * unitLength,
     y1 := 0.0,
     x2 := 3.0 * unitLength,
-    y2 := unitLength,
+    y2 := 3.0 * unitLength,
     stroke := "black"
   )
 
   private def bottomCable(unitLength: Double)
   : TypedTag[Line] = line(
     x1 := 3.0 * unitLength,
-    y1 := 5.0 * unitLength,
+    y1 := 3.0 * unitLength,
     x2 := 3.0 * unitLength,
     y2 := 6.0 * unitLength,
     stroke := "black"
@@ -150,7 +150,7 @@ object extensions {
       svgAttrs.width := 4.0 * unitLength,
       svgAttrs.height := 4.0 * unitLength,
       stroke := "black",
-      fillOpacity := 0.0
+      fill := "white"
     )
 
   private def controlSvg(unitLength: Double)
@@ -226,8 +226,7 @@ object extensions {
         svgAttrs.width := 6.0 * unitLength
       )(
         if (isOne) oneSvg(unitLength) else zeroSvg(unitLength),
-        greaterThanSvg(unitLength),
-        rightCable(unitLength)
+        greaterThanSvg(unitLength)
       )
 
     def svg(unitLength: Double): LazyList[TypedTag[SVG]] =
@@ -387,9 +386,9 @@ object extensions {
         .take(n)
         .map {
           case `k` =>
-            g.prepended(leftCable(unitLength))
+            g.prepended(boxSvg(unitLength))
+              .prepended(leftCable(unitLength))
               .prepended(rightCable(unitLength))
-              .prepended(boxSvg(unitLength))
           case _ =>
             LazyList(horizontalCable(unitLength))
         }.map {
@@ -421,10 +420,10 @@ object extensions {
       val g2 = q2Gate match {
         case Q2Gate.CX =>
           xSvgLines(unitLength)
+            .prepended(boxSvg(unitLength))
             .prepended(leftCable(unitLength))
             .prepended(rightCable(unitLength))
             .prepended(topCable(unitLength))
-            .prepended(boxSvg(unitLength))
         case Q2Gate.SWAP =>
           xSvgLines(unitLength)
             .prepended(topCable(unitLength))
@@ -491,10 +490,10 @@ object extensions {
               horizontalCable(unitLength)
             ),
             xSvgLines(unitLength)
+              .prepended(boxSvg(unitLength))
               .prepended(leftCable(unitLength))
               .prepended(rightCable(unitLength))
               .prepended(topCable(unitLength))
-              .prepended(boxSvg(unitLength))
           )
       }
       LazyList
