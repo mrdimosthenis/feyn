@@ -322,6 +322,13 @@ object extensions {
         case Q1Gate.S =>
           LazyList(
             line(
+              x1 := 3.5 * unitLength,
+              y1 := 2.0 * unitLength,
+              x2 := 3.0 * unitLength,
+              y2 := 2.0 * unitLength,
+              stroke := "black"
+            ),
+            line(
               x1 := 3.0 * unitLength,
               y1 := 2.0 * unitLength,
               x2 := 2.5 * unitLength,
@@ -346,6 +353,13 @@ object extensions {
               x1 := 3.5 * unitLength,
               y1 := 3.5 * unitLength,
               x2 := 3.0 * unitLength,
+              y2 := 4.0 * unitLength,
+              stroke := "black"
+            ),
+            line(
+              x1 := 3.0 * unitLength,
+              y1 := 4.0 * unitLength,
+              x2 := 2.5 * unitLength,
               y2 := 4.0 * unitLength,
               stroke := "black"
             )
