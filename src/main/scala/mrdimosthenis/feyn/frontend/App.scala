@@ -1,9 +1,7 @@
 package mrdimosthenis.feyn.frontend
 
-import mrdimosthenis.feyn.frontend.model.Model
 import mrdimosthenis.feyn.frontend.model.extensions._
 import akka.actor.{ActorSystem, Props}
-import mrdimosthenis.feyn.quantum.QState
 import org.scalajs.dom._
 import org.scalajs.dom.raw.HTMLSelectElement
 
