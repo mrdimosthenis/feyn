@@ -37,6 +37,7 @@ object extensions {
         Q1Gate.T,
         Q2Gate.CX,
         Q2Gate.CX,
+        Q2Gate.CZ,
         Q2Gate.SWAP,
         Q3Gate.CCX,
         Q3Gate.CSWAP,

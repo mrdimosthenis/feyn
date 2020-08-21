@@ -178,6 +178,31 @@ object extensions {
     )
   )
 
+  private def zSvgLines(unitLength: Double)
+  : LazyList[TypedTag[Line]] = LazyList(
+    line(
+      x1 := 2.0 * unitLength,
+      y1 := 2.0 * unitLength,
+      x2 := 4.0 * unitLength,
+      y2 := 2.0 * unitLength,
+      stroke := "black"
+    ),
+    line(
+      x1 := 4.0 * unitLength,
+      y1 := 2.0 * unitLength,
+      x2 := 2.0 * unitLength,
+      y2 := 4.0 * unitLength,
+      stroke := "black"
+    ),
+    line(
+      x1 := 2.0 * unitLength,
+      y1 := 4.0 * unitLength,
+      x2 := 4.0 * unitLength,
+      y2 := 4.0 * unitLength,
+      stroke := "black"
+    )
+  )
+
   implicit class QubitsSvgExtension(val qubits: LazyList[Qubit]) {
 
     private def greaterThanSvg(unitLength: Double)
@@ -271,29 +296,7 @@ object extensions {
             )
           )
         case Q1Gate.Z =>
-          LazyList(
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 2.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 2.0 * unitLength,
-              stroke := "black"
-            ),
-            line(
-              x1 := 4.0 * unitLength,
-              y1 := 2.0 * unitLength,
-              x2 := 2.0 * unitLength,
-              y2 := 4.0 * unitLength,
-              stroke := "black"
-            ),
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 4.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 4.0 * unitLength,
-              stroke := "black"
-            )
-          )
+          zSvgLines(unitLength)
         case Q1Gate.H =>
           LazyList(
             line(
@@ -406,20 +409,26 @@ object extensions {
     def svg(unitLength: Double)(ks: (Int, Int), n: Int)
     : LazyList[TypedTag[SVG]] = {
       val g1 = q2Gate match {
-        case Q2Gate.CX =>
+        case Q2Gate.SWAP =>
+          xSvgLines(unitLength)
+            .prepended(bottomCable(unitLength))
+            .prepended(horizontalCable(unitLength))
+        case _ =>
           LazyList(
             controlSvg(unitLength),
             bottomCable(unitLength),
             horizontalCable(unitLength)
           )
-        case Q2Gate.SWAP =>
-          xSvgLines(unitLength)
-            .prepended(bottomCable(unitLength))
-            .prepended(horizontalCable(unitLength))
       }
       val g2 = q2Gate match {
         case Q2Gate.CX =>
           xSvgLines(unitLength)
+            .prepended(boxSvg(unitLength))
+            .prepended(leftCable(unitLength))
+            .prepended(rightCable(unitLength))
+            .prepended(topCable(unitLength))
+        case Q2Gate.CZ =>
+          zSvgLines(unitLength)
             .prepended(boxSvg(unitLength))
             .prepended(leftCable(unitLength))
             .prepended(rightCable(unitLength))
