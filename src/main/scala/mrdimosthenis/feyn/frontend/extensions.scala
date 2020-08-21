@@ -160,6 +160,24 @@ object extensions {
     r := unitLength / 2.0
   )
 
+  private def xSvgLines(unitLength: Double)
+  : LazyList[TypedTag[Line]] = LazyList(
+    line(
+      x1 := 2.0 * unitLength,
+      y1 := 2.0 * unitLength,
+      x2 := 4.0 * unitLength,
+      y2 := 4.0 * unitLength,
+      stroke := "black"
+    ),
+    line(
+      x1 := 2.0 * unitLength,
+      y1 := 4.0 * unitLength,
+      x2 := 4.0 * unitLength,
+      y2 := 2.0 * unitLength,
+      stroke := "black"
+    )
+  )
+
   implicit class QubitsSvgExtension(val qubits: LazyList[Qubit]) {
 
     private def greaterThanSvg(unitLength: Double)
@@ -228,22 +246,7 @@ object extensions {
     : LazyList[TypedTag[SVG]] = {
       val g = q1Gate match {
         case Q1Gate.X =>
-          LazyList(
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 2.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 4.0 * unitLength,
-              stroke := "black"
-            ),
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 4.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 2.0 * unitLength,
-              stroke := "black"
-            )
-          )
+          xSvgLines(unitLength)
         case Q1Gate.Y =>
           LazyList(
             line(
@@ -392,61 +395,26 @@ object extensions {
       val g1 = q2Gate match {
         case Q2Gate.CX =>
           LazyList(
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 2.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 4.0 * unitLength,
-              stroke := "black"
-            ),
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 4.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 2.0 * unitLength,
-              stroke := "black"
-            )
+            controlSvg(unitLength),
+            bottomCable(unitLength),
+            horizontalCable(unitLength)
           )
         case Q2Gate.SWAP =>
-          LazyList(controlSvg(unitLength))
+          xSvgLines(unitLength)
+            .prepended(bottomCable(unitLength))
+            .prepended(horizontalCable(unitLength))
       }
       val g2 = q2Gate match {
         case Q2Gate.CX =>
-          LazyList(
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 2.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 4.0 * unitLength,
-              stroke := "black"
-            ),
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 4.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 2.0 * unitLength,
-              stroke := "black"
-            ),
-            topCable(unitLength),
-            boxSvg(unitLength)
-          )
+          xSvgLines(unitLength)
+            .prepended(leftCable(unitLength))
+            .prepended(rightCable(unitLength))
+            .prepended(topCable(unitLength))
+            .prepended(boxSvg(unitLength))
         case Q2Gate.SWAP =>
-          LazyList(
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 2.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 4.0 * unitLength,
-              stroke := "black"
-            ),
-            line(
-              x1 := 2.0 * unitLength,
-              y1 := 4.0 * unitLength,
-              x2 := 4.0 * unitLength,
-              y2 := 2.0 * unitLength,
-              stroke := "black"
-            )
-          )
+          xSvgLines(unitLength)
+            .prepended(topCable(unitLength))
+            .prepended(horizontalCable(unitLength))
       }
       LazyList
         .from(0)
@@ -466,9 +434,6 @@ object extensions {
               horizontalCable(unitLength)
             )
         }.map {
-        _.prepended(leftCable(unitLength))
-          .prepended(rightCable(unitLength))
-      }.map {
         svgTags.svg(
           svgAttrs.height := 6.0 * unitLength,
           svgAttrs.width := 6.0 * unitLength
@@ -486,70 +451,36 @@ object extensions {
         case Q3Gate.CSWAP =>
           (
             LazyList(
-              controlSvg(unitLength)
+              controlSvg(unitLength),
+              bottomCable(unitLength),
+              horizontalCable(unitLength)
             ),
-            LazyList(
-              topCable(unitLength),
-              line(
-                x1 := 2.0 * unitLength,
-                y1 := 2.0 * unitLength,
-                x2 := 4.0 * unitLength,
-                y2 := 4.0 * unitLength,
-                stroke := "black"
-              ),
-              line(
-                x1 := 2.0 * unitLength,
-                y1 := 4.0 * unitLength,
-                x2 := 4.0 * unitLength,
-                y2 := 2.0 * unitLength,
-                stroke := "black"
-              ),
-              bottomCable(unitLength)
-            ),
-            LazyList(
-              topCable(unitLength),
-              line(
-                x1 := 2.0 * unitLength,
-                y1 := 2.0 * unitLength,
-                x2 := 4.0 * unitLength,
-                y2 := 4.0 * unitLength,
-                stroke := "black"
-              ),
-              line(
-                x1 := 2.0 * unitLength,
-                y1 := 4.0 * unitLength,
-                x2 := 4.0 * unitLength,
-                y2 := 2.0 * unitLength,
-                stroke := "black"
-              )
-            )
+            xSvgLines(unitLength)
+              .prepended(topCable(unitLength))
+              .prepended(bottomCable(unitLength))
+              .prepended(horizontalCable(unitLength)),
+            xSvgLines(unitLength)
+              .prepended(topCable(unitLength))
+              .prepended(horizontalCable(unitLength))
           )
         case Q3Gate.CCX =>
           (
             LazyList(
-              controlSvg(unitLength)
+              controlSvg(unitLength),
+              bottomCable(unitLength),
+              horizontalCable(unitLength)
             ),
             LazyList(
               topCable(unitLength),
-              controlSvg(unitLength)
+              controlSvg(unitLength),
+              bottomCable(unitLength),
+              horizontalCable(unitLength)
             ),
-            LazyList(
-              topCable(unitLength),
-              line(
-                x1 := 2.0 * unitLength,
-                y1 := 2.0 * unitLength,
-                x2 := 4.0 * unitLength,
-                y2 := 4.0 * unitLength,
-                stroke := "black"
-              ),
-              line(
-                x1 := 2.0 * unitLength,
-                y1 := 4.0 * unitLength,
-                x2 := 4.0 * unitLength,
-                y2 := 2.0 * unitLength,
-                stroke := "black"
-              )
-            )
+            xSvgLines(unitLength)
+              .prepended(leftCable(unitLength))
+              .prepended(rightCable(unitLength))
+              .prepended(topCable(unitLength))
+              .prepended(boxSvg(unitLength))
           )
       }
       LazyList
@@ -570,9 +501,6 @@ object extensions {
           else
             LazyList(horizontalCable(unitLength))
         }.map {
-        _.prepended(leftCable(unitLength))
-          .prepended(rightCable(unitLength))
-      }.map {
         svgTags.svg(
           svgAttrs.height := 6.0 * unitLength,
           svgAttrs.width := 6.0 * unitLength
