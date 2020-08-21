@@ -17,14 +17,6 @@ object Q2Gate {
       Vec(Complex.zero, Complex.zero, 1.toComplex, Complex.zero)
     ).pipe(Q2Gate.apply)
 
-  val CY: Q2Gate =
-    Matrix(
-      Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),
-      Vec(Complex.zero, 1.toComplex, Complex.zero, Complex.zero),
-      Vec(Complex.zero, Complex.zero, Complex.zero, Complex(0, -1)),
-      Vec(Complex.zero, Complex.zero, Complex(0, 1), Complex.zero)
-    ).pipe(Q2Gate.apply)
-
   val CZ: Q2Gate =
     Matrix(
       Vec(1.toComplex, Complex.zero, Complex.zero, Complex.zero),

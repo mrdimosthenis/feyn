@@ -1,9 +1,7 @@
 package mrdimosthenis.feyn.frontend
 
-
 import mrdimosthenis.feyn.frontend.model.Model
-import mrdimosthenis.feyn.graphics.textExtensions._
-import mrdimosthenis.feyn.graphics.svgExtensions._
+import mrdimosthenis.feyn.frontend.extensions._
 import mrdimosthenis.feyn.game.switches._
 import akka.actor.{Actor, ActorRef}
 import org.scalajs.dom._
@@ -11,6 +9,8 @@ import org.scalajs.dom._
 import scala.util.chaining._
 
 object Decorator extends Actor {
+
+  private val svgUnitLength = 10.0
 
   private val table = document
     .getElementById("table")
@@ -34,10 +34,10 @@ object Decorator extends Actor {
     val qubits = model
       .puzzle
       .qubits
-      .text
-      .map { txt =>
+      .svg(svgUnitLength)
+      .map { svg =>
         val th = document.createElement("th")
-        th.innerText = txt
+        th.appendChild(svg.render)
         th
       }
     val gates = model
@@ -48,20 +48,20 @@ object Decorator extends Actor {
         case q1Switch: Q1Switch =>
           q1Switch
             .q1Gate
-            .text(q1Switch.k, model.puzzle.qubits.length)
+            .svg(svgUnitLength)(q1Switch.k, model.puzzle.qubits.length)
         case q2Switch: Q2Switch =>
           q2Switch
             .q2Gate
-            .text(q2Switch.ks, model.puzzle.qubits.length)
+            .svg(svgUnitLength)(q2Switch.ks, model.puzzle.qubits.length)
         case q3Switch: Q3Switch =>
           q3Switch
             .q3Gate
-            .text(q3Switch.ks, model.puzzle.qubits.length)
+            .svg(svgUnitLength)(q3Switch.ks, model.puzzle.qubits.length)
       }
       .map { texts =>
-        texts.map { txt =>
+        texts.map { svg =>
           val td = document.createElement("td")
-          td.innerText = txt
+          td.appendChild(svg.render)
           td
         }
       }
@@ -148,6 +148,7 @@ object Decorator extends Actor {
             if (isHighlighted) ("lightgreen", "lightblue")
             else ("green", "blue")
           )
+          .render
           .pipe(div.appendChild)
         val tag = document.createElement("span")
         tag.setAttribute("class", "tag is-unselectable")
