@@ -12,6 +12,8 @@ import scala.util.chaining._
 
 object Decorator extends Actor {
 
+  private val svgUnitLength = 10.0
+
   private val table = document
     .getElementById("table")
 
@@ -34,10 +36,10 @@ object Decorator extends Actor {
     val qubits = model
       .puzzle
       .qubits
-      .text
-      .map { txt =>
+      .svg(svgUnitLength)
+      .map { svg =>
         val th = document.createElement("th")
-        th.innerText = txt
+        th.appendChild(svg.render)
         th
       }
     val gates = model
