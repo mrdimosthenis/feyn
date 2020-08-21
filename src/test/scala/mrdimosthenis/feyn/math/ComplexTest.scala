@@ -1,7 +1,7 @@
 package mrdimosthenis.feyn.math
 
 import mrdimosthenis.feyn.math.extensions._
-import mrdimosthenis.feyn.graphics.svgExtensions._
+import mrdimosthenis.feyn.frontend.extensions._
 
 import minitest._
 
@@ -80,6 +80,7 @@ object ComplexTest extends SimpleTestSuite {
     assert(
       (Complex(0.2, -0.6), Complex(0.6, 0.0))
         .svg(60, ("red", "blue"))
+        .render
         .outerHTML
         .eq("<svg height=\"60\" width=\"60\"><filter id=\"blurMe\"><feOffset result=\"offOut\" in=\"SourceAlpha\" dx=\"1\" dy=\"1\"></feOffset><feGaussianBlur stdDeviation=\"1\"></feGaussianBlur><feBlend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\"></feBlend></filter><circle cx=\"30\" cy=\"30\" r=\"30\" fill-opacity=\"0\" stroke=\"red\"></circle><circle cx=\"30\" cy=\"30\" r=\"1\" fill-opacity=\"0.25\" stroke=\"red\"></circle><circle cx=\"36\" cy=\"48\" r=\"4\" fill-opacity=\"0.75\" fill=\"red\" filter=\"url(#blurMe)\"></circle><circle cx=\"48\" cy=\"30\" r=\"4\" fill-opacity=\"0.75\" fill=\"blue\" filter=\"url(#blurMe)\"></circle></svg>")
     )
@@ -87,6 +88,7 @@ object ComplexTest extends SimpleTestSuite {
     assert(
       (Complex(-0.2, 0.6), Complex(0.0, 0.2))
         .svg(80, ("yellow", "green"))
+        .render
         .outerHTML
         .eq("<svg height=\"80\" width=\"80\"><filter id=\"blurMe\"><feOffset result=\"offOut\" in=\"SourceAlpha\" dx=\"1\" dy=\"1\"></feOffset><feGaussianBlur stdDeviation=\"1\"></feGaussianBlur><feBlend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\"></feBlend></filter><circle cx=\"40\" cy=\"40\" r=\"40\" fill-opacity=\"0\" stroke=\"yellow\"></circle><circle cx=\"40\" cy=\"40\" r=\"1\" fill-opacity=\"0.25\" stroke=\"yellow\"></circle><circle cx=\"32\" cy=\"16\" r=\"4\" fill-opacity=\"0.75\" fill=\"yellow\" filter=\"url(#blurMe)\"></circle><circle cx=\"40\" cy=\"32\" r=\"4\" fill-opacity=\"0.75\" fill=\"green\" filter=\"url(#blurMe)\"></circle></svg>")
     )

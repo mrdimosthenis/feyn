@@ -2,8 +2,8 @@ package mrdimosthenis.feyn.frontend
 
 
 import mrdimosthenis.feyn.frontend.model.Model
+import mrdimosthenis.feyn.frontend.extensions._
 import mrdimosthenis.feyn.graphics.textExtensions._
-import mrdimosthenis.feyn.graphics.svgExtensions._
 import mrdimosthenis.feyn.game.switches._
 import akka.actor.{Actor, ActorRef}
 import org.scalajs.dom._
@@ -148,6 +148,7 @@ object Decorator extends Actor {
             if (isHighlighted) ("lightgreen", "lightblue")
             else ("green", "blue")
           )
+          .render
           .pipe(div.appendChild)
         val tag = document.createElement("span")
         tag.setAttribute("class", "tag is-unselectable")
