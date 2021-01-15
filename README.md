@@ -6,4 +6,6 @@ The goal of the game is to find the gate combination from which the qubits need 
 
 ![screenshot](screenshot.png?raw=true)
 
+It is the prototype for [Quantum Puzzle Generator](https://github.com/mrdimosthenis/QuantumPuzzleGenerator).
+
 _The application is written in Scala._
